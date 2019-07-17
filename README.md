@@ -4,7 +4,8 @@ Adds tons of usefull features to poe.trade, from a very easy to use save manager
 
 ## Features
 
-###Item Search enhancements
+### Item Search enhancements
+
 * Adds a save manager to easily save and reload any item search.
 * Sort item and currency searches on **poe.trade** by current chaos equivalent using **poe.ninja** values.
 * "Copy for Path of Building" button on every item result.
@@ -12,7 +13,8 @@ Adds tons of usefull features to poe.trade, from a very easy to use save manager
 * For tiered items (essences, sextants...) show the cost of reaching max tier, also enabling sorting by this value.
 * For gems show the cost of reaching max quality by buying the gem and the necessary gemcutter's prisms, also enabling sorting by this value.
 * Wiki links for additional items and types.
-###Currency Search enhancements
+### Currency Search enhancements
+
 * Track "contacted" seller in currency searches like the app already does for item searches.
 * Change quantities in currency searches freely.
 
