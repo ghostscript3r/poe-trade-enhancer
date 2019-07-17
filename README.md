@@ -1,8 +1,8 @@
-#Poe Trade Enhancer
+# Poe Trade Enhancer
 
 Adds tons of usefull features to poe.trade, from a very easy to use save manager to save your searches, to an auto sort by real currency values (from poe.ninja), passing from gems max quality cost and more. I have some other very good idea for features to add, I'll gladly push them forward if I see people start using this.
 
-##Features
+## Features
 
 ###Item Search enhancements
 * Adds a save manager to easily save and reload any item search.
@@ -16,7 +16,7 @@ Adds tons of usefull features to poe.trade, from a very easy to use save manager
 * Track "contacted" seller in currency searches like the app already does for item searches.
 * Change quantities in currency searches freely.
 
-##Please consider donating
+## Please consider donating
 
 If you like this script and wish it's kept working or wish new features to be added, consider contributing somehow.
 Consider that by nature UserScripts need maintenance. I will never have any control on how or when the site I'm modifing will change. I try to develop theese scripts as smart as possible so that if anything changes they at least don't make the original unusable, but as the site changes the script will need to adapt to continue working. So if you find this usefull and wish to continue using it, really consider supporting me. If no one will, I'm pretty sure I will abandon theese projects sooner or later, and after that it's only a matter of time before it stop working.
@@ -25,13 +25,13 @@ If not with a donation you can contribute by reccomending it to your friends, or
 Check my page on [Patreon](https://www.patreon.com/ghostscripter) and follow directions from there on how to request new features or scripts.
 There's already a specific page for **[requesting new features for this project](https://www.tricider.com/admin/36HWcTk5RhZ/DawSV0oQX7b)**.
 
-##Issue tracking
+## Issue tracking
 
 [GitHub issue tracking page](https://github.com/ghostscript3r/poe-trade-enhancer/issues)
 
 > ### Use only GitHub please. The other repositories section will be monitored occasionally at best. Also avoid sending bug report directly to my mail, there's a very high probability they'll just be ignored that way.
 
-##Roadmap
+## Roadmap
 
 I'd like to see some votes before starting on new features. I already put some ideas there, but I'd like to see more from you. If nothing appens there, the next thing will probably be a smart mod and ranges selector based on poe.affix values, because choosing a mod that gives no results because the mod for the type of item I'm searching is spelled slightly differente is one of the things I find more frustrating of this interface.
 
