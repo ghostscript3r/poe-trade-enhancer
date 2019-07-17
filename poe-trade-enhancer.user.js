@@ -5,7 +5,6 @@
 // @description  Adds tons of usefull features to poe.trade, from a very easy to use save manager to save your searches, to an auto sort by real currency values (from poe.ninja), passing from gems max quality cost and more. I have some other very good idea for features to add, I'll gladly push them forward if I see people start using this.
 // @author       ghostscript3r@gmail.com | https://www.patreon.com/ghostscripter
 // @license      MIT
-// @license      https://creativecommons.org/licenses/by-sa/4.0/
 // @match        http://poe.trade/*
 // @match        https://poe.trade/*
 // @match        http://currency.poe.trade/*
