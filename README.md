@@ -52,13 +52,13 @@ I'd like to see some votes before starting on new features. I already put some i
 
 > #### Note: Right now it is tested with Tampermonkey on Chrome and Firefox. If need arises I'll test/debug on other browsers and ScriptManagers.
 
-* ![firefox](https://raw.githubusercontent.com/ghostscript3r/poe-trade-enhancer/master/images/firefox.png) [Tampermonkey](https://www.tampermonkey.net/index.php?ext=dhdg&browser=firefox) [Greasemonkey](https://addons.mozilla.org/firefox/addon/greasemonkey/)
-* ![chrome](https://raw.githubusercontent.com/ghostscript3r/poe-trade-enhancer/master/images/chrome.png) [Tampermonkey](https://www.tampermonkey.net/index.php?ext=dhdg&browser=chrome)
-* ![opera](https://raw.githubusercontent.com/ghostscript3r/poe-trade-enhancer/master/images/opera.png) [Tampermonkey](https://www.tampermonkey.net/index.php?ext=dhdg&browser=opera) [Violentmonkey](https://addons.opera.com/extensions/details/violent-monkey/)
-* ![edge](https://raw.githubusercontent.com/ghostscript3r/poe-trade-enhancer/master/images/msedge.png) [Tampermonkey](https://www.tampermonkey.net/index.php?ext=dhdg&browser=edge)
-* ![safari](https://raw.githubusercontent.com/ghostscript3r/poe-trade-enhancer/master/images/safari.png) [Tampermonkey](https://www.tampermonkey.net/index.php?ext=dhdg&browser=safari) [NinjaKit](https://github.com/os0x/NinjaKit)
-* ![dolphin](https://raw.githubusercontent.com/ghostscript3r/poe-trade-enhancer/master/images/dolphin.png) [Tampermonkey](https://www.tampermonkey.net/index.php?ext=dhdg&browser=dolphin)
-* ![ucweb](https://raw.githubusercontent.com/ghostscript3r/poe-trade-enhancer/master/images/ucweb.png) [Tampermonkey](https://www.tampermonkey.net/index.php?ext=dhdg&browser=ucweb)
+* ![firefox](https://raw.githubusercontent.com/ghostscript3r/poe-trade-enhancer/master/images/firefox.png) Firefox: [Tampermonkey](https://www.tampermonkey.net/index.php?ext=dhdg&browser=firefox) - [Greasemonkey](https://addons.mozilla.org/firefox/addon/greasemonkey/)
+* ![chrome](https://raw.githubusercontent.com/ghostscript3r/poe-trade-enhancer/master/images/chrome.png) Chrome: [Tampermonkey](https://www.tampermonkey.net/index.php?ext=dhdg&browser=chrome)
+* ![opera](https://raw.githubusercontent.com/ghostscript3r/poe-trade-enhancer/master/images/opera.png) Opera: [Tampermonkey](https://www.tampermonkey.net/index.php?ext=dhdg&browser=opera) - [Violentmonkey](https://addons.opera.com/extensions/details/violent-monkey/)
+* ![edge](https://raw.githubusercontent.com/ghostscript3r/poe-trade-enhancer/master/images/msedge.png) Microsoft Edge: [Tampermonkey](https://www.tampermonkey.net/index.php?ext=dhdg&browser=edge)
+* ![safari](https://raw.githubusercontent.com/ghostscript3r/poe-trade-enhancer/master/images/safari.png) Safari: [Tampermonkey](https://www.tampermonkey.net/index.php?ext=dhdg&browser=safari) - [NinjaKit](https://github.com/os0x/NinjaKit)
+* ![dolphin](https://raw.githubusercontent.com/ghostscript3r/poe-trade-enhancer/master/images/dolphin.png) Dolphin: [Tampermonkey](https://www.tampermonkey.net/index.php?ext=dhdg&browser=dolphin)
+* ![ucweb](https://raw.githubusercontent.com/ghostscript3r/poe-trade-enhancer/master/images/ucweb.png) UC: [Tampermonkey](https://www.tampermonkey.net/index.php?ext=dhdg&browser=ucweb)
 
 ### Step 2: Install UserScript
 
