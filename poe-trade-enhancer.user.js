@@ -9,7 +9,7 @@
 // @match        https://poe.trade/*
 // @match        http://currency.poe.trade/*
 // @match        https://currency.poe.trade/*
-// @require      https://raw.github.com/shokai/jQuery.editable/master/jquery.editable.min.js
+// @require      https://greasyfork.org/scripts/387585-jqueryeditable/code/jqueryeditable.js?version=717975
 // @require      https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js
 // @require      https://unpkg.com/tippy.js@3/dist/tippy.all.min.js
 // @require      https://cdn.jsdelivr.net/npm/lodash@4.17.11/lodash.min.js
