@@ -65,7 +65,7 @@ I'd like to see some votes before starting on new features. I already put some i
 > #### Note: If you are on *greasyfork.org* or *openuserjs.org* at the top of the you should see an "Install" button, and that's all you need. Else use any of the links below in your ScriptManager interface.
 
 * [Install](https://raw.githubusercontent.com/ghostscript3r/poe-trade-enhancer/master/poe-trade-enhancer.user.js) *from github.com*
-* [Install](https://greasyfork.org/scripts/387564-poe-trade-enhancer/code/poe-trade-enhancer.user.js) *from greasyfork.org*
+* [Install](https://greasyfork.org/scripts/387586-poe-trade-enhancer/code/poe-trade-enhancer.user.js) *from greasyfork.org*
 * [Install](https://openuserjs.org/install/ghostscript3r/poe-trade-enhancer.user.js) *from openuserjs.org*
 
 ### Step 3: Enjoy & Support Author
@@ -79,7 +79,7 @@ I'd like to see some votes before starting on new features. I already put some i
 
 ## Repositories
 * [GitHub](https://github.com/ghostscript3r/poe-trade-enhancer)
-* [GreasyFork](https://greasyfork.org/scripts/387564-poe-trade-enhancer)
+* [GreasyFork](https://greasyfork.org/scripts/387586-poe-trade-enhancer)
 * [OpenUserJS](https://openuserjs.org/scripts/ghostscript3r/poe-trade-enhancer)
 
 

@@ -99,7 +99,7 @@ var repositoriesParagraph = /* html */`
   <h3 class="">Repositories</h3>
   <p>
     <a href="https://github.com/ghostscript3r/poe-trade-enhancer" target="_blank">GitHub</a><br />
-    <a href="https://greasyfork.org/scripts/387564-poe-trade-enhancer" target="_blank">GreasyFork</a><br />
+    <a href="https://greasyfork.org/scripts/387586-poe-trade-enhancer" target="_blank">GreasyFork</a><br />
     <a href="https://openuserjs.org/scripts/ghostscript3r/poe-trade-enhancer" target="_blank">OpenUserJS</a>
   </p>
 </div>
