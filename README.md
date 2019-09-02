@@ -1,18 +1,20 @@
 # Poe Trade Enhancer
 
-Adds tons of usefull features to poe.trade, from a very easy to use save manager to save your searches, to an auto sort by real currency values (from poe.ninja), passing from gems max quality cost and more. I have some other very good idea for features to add, I'll gladly push them forward if I see people start using this.
+Adds tons of usefull features to poe.trade, from a very easy to use save manager to save and laod your searches and even live search them all in one page, to an auto sort by real currency values (from poe.ninja), passing from gems max quality cost and more. I have some other very good idea for features to add, I'll gladly push them forward if I see people start using this.
 
 ## Features
 
 ### Item Search enhancements
 
 * Adds a save manager to easily save and reload any item search.
+* Multi live-search. You can live-search any number of your saved searches in one page.
 * Sort item and currency searches on **poe.trade** by current chaos equivalent using **poe.ninja** values.
 * "Copy for Path of Building" button on every item result.
 * Result can be grouped by user selling
 * For tiered items (essences, sextants...) show the cost of reaching max tier, also enabling sorting by this value.
 * For gems show the cost of reaching max quality by buying the gem and the necessary gemcutter's prisms, also enabling sorting by this value.
 * Wiki links for additional items and types.
+
 ### Currency Search enhancements
 
 * Track "contacted" seller in currency searches like the app already does for item searches.
@@ -64,9 +66,17 @@ I'd like to see some votes before starting on new features. I already put some i
 
 > #### Note: If you are on *greasyfork.org* or *openuserjs.org* at the top of the you should see an "Install" button, and that's all you need. Else use any of the links below in your ScriptManager interface.
 
+#### For poe.trade
+
 * [Install](https://raw.githubusercontent.com/ghostscript3r/poe-trade-enhancer/master/poe-trade-enhancer.user.js) *from github.com*
 * [Install](https://greasyfork.org/scripts/387586-poe-trade-enhancer/code/poe-trade-enhancer.user.js) *from greasyfork.org*
 * [Install](https://openuserjs.org/install/ghostscript3r/poe-trade-enhancer.user.js) *from openuserjs.org*
+
+#### For pathofexile.com/trade
+
+* [Install](https://raw.githubusercontent.com/ghostscript3r/poe-trade-official-site-enhancer/master/poe-trade-enhancer.user.js) *from github.com*
+* [Install](https://greasyfork.org/scripts/387586-poe-trade-official-site-enhancer/code/poe-trade-enhancer.user.js) *from greasyfork.org*
+* [Install](https://openuserjs.org/install/ghostscript3r/poe-trade-official-site-enhancer.user.js) *from openuserjs.org*
 
 ### Step 3: Enjoy & Support Author
 
@@ -98,6 +108,8 @@ For a list of all projects published or planned visit [my patreon page](https://
 
 * Adds a save manager to easily save and reload any item search.
 ![](https://raw.githubusercontent.com/ghostscript3r/poe-trade-enhancer/master/images/save-man.gif)
+* Multi live-search. You can live-search any number of your saved searches in one page.
+![](https://raw.githubusercontent.com/ghostscript3r/poe-trade-enhancer/master/images/multi-live.gif)
 * Sort item and currency searches on **poe.trade** by current chaos equivalent using **poe.ninja** values.
 ![](https://raw.githubusercontent.com/ghostscript3r/poe-trade-enhancer/master/images/sort-real-curr.gif)
 * "Copy for Path of Building" button on every item result.
