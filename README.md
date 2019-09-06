@@ -2,6 +2,8 @@
 
 Adds tons of usefull features to poe.trade, from a very easy to use save manager to save and laod your searches and even live search them all in one page, to an auto sort by real currency values (from poe.ninja), passing from gems max quality cost and more. I have some other very good idea for features to add, I'll gladly push them forward if I see people start using this.
 
+*THERE'S ALSO A VERSION OF THIS SCRIPT FOR THE OFFICIAL POE SITE: [you can find it here](https://github.com/ghostscript3r/poe-trade-official-site-enhancer)*
+
 ## Features
 
 ### Item Search enhancements
@@ -74,8 +76,8 @@ I'd like to see some votes before starting on new features. I already put some i
 
 #### For pathofexile.com/trade
 
-* [Install](https://raw.githubusercontent.com/ghostscript3r/poe-trade-official-site-enhancer/master/poe-trade-enhancer.user.js) *from github.com*
-* [Install](https://greasyfork.org/scripts/387586-poe-trade-official-site-enhancer/code/poe-trade-enhancer.user.js) *from greasyfork.org*
+* [Install](https://raw.githubusercontent.com/ghostscript3r/poe-trade-official-site-enhancer/master/poe-trade-official-site-enhancer.user.js) *from github.com*
+* [Install](https://greasyfork.org/scripts/389702-poe-trade-official-site-enhancer/code/poe-trade-official-site-enhancer.user.js) *from greasyfork.org*
 * [Install](https://openuserjs.org/install/ghostscript3r/poe-trade-official-site-enhancer.user.js) *from openuserjs.org*
 
 ### Step 3: Enjoy & Support Author
