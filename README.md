@@ -1,4 +1,4 @@
-# Poe Trade Enhancer
+# Poe Trade Enhancer - [install link](https://raw.githubusercontent.com/ghostscript3r/poe-trade-enhancer/master/poe-trade-enhancer.user.js)
 
 Adds tons of usefull features to poe.trade, from a very easy to use save manager to save and laod your searches and even live search them all in one page, to an auto sort by real currency values (from poe.ninja), passing from gems max quality cost and more. I have some other very good idea for features to add, I'll gladly push them forward if I see people start using this.
 
