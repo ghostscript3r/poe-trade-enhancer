@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         poe-trade-enhancer
 // @namespace    https://github.com/ghostscript3r/poe-trade-enhancer
-// @version      1.3.0
+// @version      1.3.78
 // @description  Adds tons of usefull features to poe.trade, from a very easy to use save manager to save and laod your searches and even live search them all in one page, to an auto sort by real currency values (from poe.ninja), passing from gems max quality cost and more. I have some other very good idea for features to add, I'll gladly push them forward if I see people start using this.
 // @author       ghostscript3r@gmail.com | https://www.patreon.com/ghostscripter
 // @license      MIT
@@ -11,6 +11,7 @@
 // @match        http://currency.poe.trade/*
 // @match        https://currency.poe.trade/*
 // @require      https://greasyfork.org/scripts/387585-jqueryeditable/code/jqueryeditable.js?version=717975
+// @require      https://greasyfork.org/scripts/373124-gm4-polyfill-mach6-legacy/code/gm4-polyfill-mach6-legacy.js?version=635792
 // @require      https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js
 // @require      https://unpkg.com/tippy.js@3/dist/tippy.all.min.js
 // @require      https://cdn.jsdelivr.net/npm/lodash@4.17.11/lodash.min.js
@@ -30,10 +31,10 @@
   
   var DELAY = 0;
 
-  var fontsCSS = GM_getResourceText ("fontsCSS");
+  var fontsCSS = GM_getResourceText("fontsCSS");
   GM_addStyle (fontsCSS);
-  GM_addStyle(`.gs-style-enabler .gs-frame,.gs-style-enabler .gs-style{background-color:#e8eff2;border:1px dashed #111;border-radius:5px;padding:5px}.gs-style-enabler .gs-style{background-color:#e8eff2;color:#222;padding:1px 2px}.gs-style-enabler .gs-style a{color:#09c;text-decoration:underline dashed}.gs-style-enabler .gs-style-light{font-size:.8em;font-style:italic;opacity:.9;background-color:#fff;line-height:1.2em}.gs-style a,a.gs-style{cursor:pointer}body.frame-setting-frame{background-color:#e8eff2}a i.fas{cursor:pointer}.gs-frame{width:90%;min-height:300px;max-width:900px;height:85%;position:fixed;left:50%;transform:translateX(-50%);top:7.5%;z-index:100001}.gs-backdrop{width:100%;min-height:300px;height:100%;position:fixed;left:0;top:0;z-index:100000;background:rgba(255,255,255,.3)}.hide{display:none}.nowrap{white-space:nowrap}.gs-pull-right{float:right}.gs-pull-left{float:left}.tippy-content a{color:#222}.patreon-button img{height:47px;border-radius:1.5rem}.paypal-form{padding-bottom:0;margin-bottom:-6px}#saved-alert{position:fixed;z-index:0;padding-left:0;padding-right:30px}.modal-dialog.modal-xl{max-width:90%}#ms-console-tip{text-align:left}.gs-danger{color:#dc3545!important}.gs-info{color:#17a2b8!important}.gs-warning{color:#ffc107!important}.gs-success{color:#28a745!important}.gs-quote{color:#6c757d!important;font-style:italic}`);
-  GM_addStyle(`body,html{height:100%}.currencyClicked{font-style:italic}.item .real-sort:hover{background:#000}.grouped-only,.proplist li.grouped-only{display:none}.grouped .grouped-only,.grouped .proplist li.grouped-only{display:inline}.marg-b-5{margin-bottom:5px}.marg-l-5{margin-left:5px}.title a.gs-style{padding:3px 5px;font-size:12px;line-height:12px;top:-6px;position:relative}.chaosEquiv,.gs-item-handle{margin-left:5px;padding:1px 2px;border:1px solid #fff;border-radius:5px;white-space:nowrap}.grouped .resultset .row.gs-group-member{display:none}.gs-style-enabler .title a.gs-style{color:#222}.gs-style-enabler .chaosEquiv,.gs-style-enabler .gs-item-handle,.gs-style-enabler .tippy-backdrop{background-color:#e8eff2;border:1px dashed #111;border-radius:5px}.gs-style-enabler .chaosEquiv,.gs-style-enabler .gs-item-handle,.gs-style-enabler .tippy-content{background-color:#e8eff2;color:#222}.gs-style-enabler a.gs-style:focus,.gs-style-enabler a.gs-style:hover{color:#222}.gs-style-enabler .gs-style{padding:1px 2px}.gs-style-enabler .gs-style.wiki-link{padding:0 2px}.gs-style-enabler .gs-style,.gs-style-enabler .tippy-content{font-family:Roboto,sans-serif}.gs-style-enabler .chaosEquiv,.gs-style-enabler .gs-item-handle{font-family:Oswald,sans-serif}.gs-style-enabler .item .real-sort.gs-style:hover{color:#fff}.gs-style-enabler tr.cell-second td.gs-style,.gs-style-enabler tr.cell-second th.gs-style{background-color:#e8eff2}.gs-style-enabler tr.cell-second th.gs-style{border-bottom:none;border-bottom-left-radius:0;border-bottom-right-radius:0}.gs-style-enabler tr.cell-second td.gs-style{border-top:none;border-top-left-radius:0;border-top-right-radius:0}.gs-style-enabler .hide{display:none}.gs-style-enabler .nowrap{white-space:nowrap}.gs-style-enabler .tippy-content a{color:#222}.gs-style-enabler .form-group.disabled label{color:#6c757d}.gs-load.gs-style,.gs-multi.gs-style,.gs-save.gs-style{margin-left:7px}.live-search-box.alert-box .gs-load.gs-style,.live-search-box.alert-box .gs-multi.gs-style,.live-search-box.alert-box .gs-save.gs-style{margin-left:0;margin-right:7px}.gs-save.gs-style{padding:0 7px}.gs-load.gs-style{padding:0 5px}.gs-multi.gs-style{padding:0 6px}.tippy-content a{color:#fff}.currencySettings .itemSettingsOnly,.itemSettings .currencySettingsOnly{display:none}.curr-table img{height:22px}.poeOffSite .alert-box.live-search{margin:3px 8px;font-weight:700}.poeOffSite.gs-style-enabler #trade .gs-style a,.poeOffSite.gs-style-enabler #trade .gs-style-light a{color:#09c}.poeOffSite.gs-style-enabler .gs-style-light{font-size:.9em}.poeOffSite.gs-style-enabler div.gs-wrapper{line-height:32px}.poeOffSite.gs-search-tab .gs-multi.hide{display:inline!important}.poeOffSite.gs-exchange-tab .copied{font-style:italic}.poeOffSite.gs-exchange-tab .copied:after{content:' copied'}.poeOffSite #trade .results .search-bar .details .price .gs-wrapper img,.poeOffSite .results #trade .search-bar .details .price .gs-wrapper img,.poeOffSite .results .row .details .price .gs-wrapper img{width:22px;vertical-align:sub}.poeOffSite .linkBack{min-width:359px}.poeOffSite .nav-tabs .pteSettings{height:32px;float:right}.poeOffSite .chaosEquiv,.poeOffSite .gs-item-handle{padding:3px 7px;cursor:pointer}.poeOffSite .tippy-content{font-size:1.6em}.poeOffSite .tippy-content .currency-image img{width:22px}.poeOffSite .gs-load.gs-style,.poeOffSite .gs-multi.gs-style,.poeOffSite .gs-save.gs-style{cursor:pointer}.poeOffSite .controls .gs-load,.poeOffSite .controls .gs-multi,.poeOffSite .controls .gs-save{margin-left:0;margin-right:5px}.poeOffSite #trade .controls.saveManager .controls-left{width:25%!important}.poeOffSite #trade .controls.saveManager .controls-right{width:45%!important}.poeOffSite #trade .controls.saveManager .controls-center{width:30%!important}@media (max-width:800px){.poeOffSite #trade .controls.saveManager .controls-left{width:50%!important}.poeOffSite #trade .controls.saveManager .controls-right{width:100%!important}.poeOffSite #trade .controls.saveManager .controls-center{width:50%!important}}.alert-box.live-search{padding:3px 5px}`);
+  GM_addStyle(`.gs-style-enabler .gs-frame,.gs-style-enabler .gs-style{background-color:#e8eff2;border:1px dashed #111;border-radius:5px;padding:5px}.gs-style-enabler .gs-style{background-color:#e8eff2;color:#222;padding:1px 2px}.gs-style-enabler .gs-style a{color:#09c;text-decoration:underline dashed}.gs-style-enabler .gs-style-light{font-size:.8em;font-style:italic;opacity:.9;background-color:#fff;line-height:1.2em}.gs-style a,a.gs-style{cursor:pointer}body.frame-setting-frame{background-color:#e8eff2}a i.fas{cursor:pointer}.gs-frame{width:90%;min-height:300px;max-width:900px;height:85%;position:fixed;left:50%;transform:translateX(-50%);top:7.5%;z-index:100001}.gs-backdrop{width:100%;min-height:300px;height:100%;position:fixed;left:0;top:0;z-index:100000;background:rgba(255,255,255,.3)}.hide{display:none}.nowrap{white-space:nowrap}.gs-pull-right{float:right}.gs-pull-left{float:left}.tippy-content a{color:#222}.patreon-button img{height:47px;border-radius:1.5rem}.paypal-form{padding-bottom:0;margin-bottom:-6px}#saved-alert{position:fixed;z-index:0;padding-left:0;padding-right:30px}.modal-dialog.modal-xl{max-width:90%}`);
+  GM_addStyle(`body,html{height:100%}.currencyClicked{font-style:italic}.item .real-sort:hover{background:#000}.grouped-only,.proplist li.grouped-only{display:none}.grouped .grouped-only,.grouped .proplist li.grouped-only{display:inline}.marg-b-5{margin-bottom:5px}.marg-l-5{margin-left:5px}.title a.gs-style{padding:3px 5px;font-size:12px;line-height:12px;top:-6px;position:relative}.chaosEquiv,.gs-item-handle{margin-left:5px;padding:1px 2px;border:1px solid #fff;border-radius:5px;white-space:nowrap}.grouped .resultset .row.gs-group-member{display:none}.gs-style-enabler .title a.gs-style{color:#222}.gs-style-enabler .chaosEquiv,.gs-style-enabler .gs-item-handle,.gs-style-enabler .tippy-backdrop{background-color:#e8eff2;border:1px dashed #111;border-radius:5px}.gs-style-enabler .chaosEquiv,.gs-style-enabler .gs-item-handle,.gs-style-enabler .tippy-content{background-color:#e8eff2;color:#222}.gs-style-enabler a.gs-style:focus,.gs-style-enabler a.gs-style:hover{color:#222}.gs-style-enabler .gs-style{padding:1px 2px}.gs-style-enabler .gs-style.wiki-link{padding:0 2px}.gs-style-enabler .gs-style,.gs-style-enabler .tippy-content{font-family:Roboto,sans-serif}.gs-style-enabler .chaosEquiv,.gs-style-enabler .gs-item-handle{font-family:Oswald,sans-serif}.gs-style-enabler .item .real-sort.gs-style:hover{color:#fff}.gs-style-enabler tr.cell-second td.gs-style,.gs-style-enabler tr.cell-second th.gs-style{background-color:#e8eff2}.gs-style-enabler tr.cell-second th.gs-style{border-bottom:none;border-bottom-left-radius:0;border-bottom-right-radius:0}.gs-style-enabler tr.cell-second td.gs-style{border-top:none;border-top-left-radius:0;border-top-right-radius:0}.gs-style-enabler .hide{display:none}.gs-style-enabler .nowrap{white-space:nowrap}.gs-style-enabler .tippy-content a{color:#222}.gs-style-enabler .form-group.disabled label{color:#6c757d}.gs-load.gs-style,.gs-multi.gs-style,.gs-save.gs-style{margin-left:7px}.live-search-box.alert-box .gs-load.gs-style,.live-search-box.alert-box .gs-multi.gs-style,.live-search-box.alert-box .gs-save.gs-style{margin-left:0;margin-right:7px}.gs-save.gs-style{padding:0 7px}.gs-load.gs-style{padding:0 5px}.gs-multi.gs-style{padding:0 6px}.tippy-content a{color:#fff}.currencySettings .itemSettingsOnly,.itemSettings .currencySettingsOnly{display:none}.curr-table img{height:22px}.poeOffSite .alert-box.live-search{margin:3px 8px;font-weight:700}.poeOffSite.gs-style-enabler #trade .gs-style a,.poeOffSite.gs-style-enabler #trade .gs-style-light a{color:#09c}.poeOffSite.gs-style-enabler .gs-style-light{font-size:.9em}.poeOffSite.gs-style-enabler div.gs-wrapper{line-height:32px}.poeOffSite.gs-search-tab .gs-multi.hide{display:inline!important}.poeOffSite.gs-exchange-tab .copied{font-style:italic}.poeOffSite.gs-exchange-tab .copied:after{content:' copied'}.poeOffSite #trade .results .search-bar .details .price .gs-wrapper img,.poeOffSite .results #trade .search-bar .details .price .gs-wrapper img,.poeOffSite .results .row .details .price .gs-wrapper img{width:22px;vertical-align:sub}.poeOffSite .linkBack{min-width:359px}.poeOffSite .nav-tabs .pteSettings{height:32px;float:right}.poeOffSite .chaosEquiv,.poeOffSite .gs-item-handle{padding:3px 7px;cursor:pointer}.poeOffSite .tippy-content{font-size:1.6em}.poeOffSite .tippy-content .currency-image img{width:22px}.poeOffSite .gs-load.gs-style,.poeOffSite .gs-multi.gs-style,.poeOffSite .gs-save.gs-style{cursor:pointer}.poeOffSite .controls .gs-load,.poeOffSite .controls .gs-multi,.poeOffSite .controls .gs-save{margin-left:0;margin-right:5px}.poeOffSite #trade .controls.saveManager .controls-left{width:25%!important}.poeOffSite #trade .controls.saveManager .controls-right{width:45%!important}.poeOffSite #trade .controls.saveManager .controls-center{width:30%!important}@media (max-width:800px){.poeOffSite #trade .controls.saveManager .controls-left{width:50%!important}.poeOffSite #trade .controls.saveManager .controls-right{width:100%!important}.poeOffSite #trade .controls.saveManager .controls-center{width:50%!important}}.alert-box.live-search{padding:3px 5px}#ms-console-tip{text-align:left}.gs-danger{color:#dc3545!important}.gs-info{color:#17a2b8!important}.gs-warning{color:#ffc107!important}.gs-success{color:#28a745!important}.gs-quote{color:#6c757d!important;font-style:italic}`);
 
   // GM_addStyle('table.masters img {width: 28px;}');
 
@@ -167,8 +168,8 @@ var frameTemplate = /* html */`
     };
     loop();
   </script>
-  <style>.gs-style-enabler .gs-frame,.gs-style-enabler .gs-style{background-color:#e8eff2;border:1px dashed #111;border-radius:5px;padding:5px}.gs-style-enabler .gs-style{background-color:#e8eff2;color:#222;padding:1px 2px}.gs-style-enabler .gs-style a{color:#09c;text-decoration:underline dashed}.gs-style-enabler .gs-style-light{font-size:.8em;font-style:italic;opacity:.9;background-color:#fff;line-height:1.2em}.gs-style a,a.gs-style{cursor:pointer}body.frame-setting-frame{background-color:#e8eff2}a i.fas{cursor:pointer}.gs-frame{width:90%;min-height:300px;max-width:900px;height:85%;position:fixed;left:50%;transform:translateX(-50%);top:7.5%;z-index:100001}.gs-backdrop{width:100%;min-height:300px;height:100%;position:fixed;left:0;top:0;z-index:100000;background:rgba(255,255,255,.3)}.hide{display:none}.nowrap{white-space:nowrap}.gs-pull-right{float:right}.gs-pull-left{float:left}.tippy-content a{color:#222}.patreon-button img{height:47px;border-radius:1.5rem}.paypal-form{padding-bottom:0;margin-bottom:-6px}#saved-alert{position:fixed;z-index:0;padding-left:0;padding-right:30px}.modal-dialog.modal-xl{max-width:90%}#ms-console-tip{text-align:left}.gs-danger{color:#dc3545!important}.gs-info{color:#17a2b8!important}.gs-warning{color:#ffc107!important}.gs-success{color:#28a745!important}.gs-quote{color:#6c757d!important;font-style:italic}</style>
-  <style>body,html{height:100%}.currencyClicked{font-style:italic}.item .real-sort:hover{background:#000}.grouped-only,.proplist li.grouped-only{display:none}.grouped .grouped-only,.grouped .proplist li.grouped-only{display:inline}.marg-b-5{margin-bottom:5px}.marg-l-5{margin-left:5px}.title a.gs-style{padding:3px 5px;font-size:12px;line-height:12px;top:-6px;position:relative}.chaosEquiv,.gs-item-handle{margin-left:5px;padding:1px 2px;border:1px solid #fff;border-radius:5px;white-space:nowrap}.grouped .resultset .row.gs-group-member{display:none}.gs-style-enabler .title a.gs-style{color:#222}.gs-style-enabler .chaosEquiv,.gs-style-enabler .gs-item-handle,.gs-style-enabler .tippy-backdrop{background-color:#e8eff2;border:1px dashed #111;border-radius:5px}.gs-style-enabler .chaosEquiv,.gs-style-enabler .gs-item-handle,.gs-style-enabler .tippy-content{background-color:#e8eff2;color:#222}.gs-style-enabler a.gs-style:focus,.gs-style-enabler a.gs-style:hover{color:#222}.gs-style-enabler .gs-style{padding:1px 2px}.gs-style-enabler .gs-style.wiki-link{padding:0 2px}.gs-style-enabler .gs-style,.gs-style-enabler .tippy-content{font-family:Roboto,sans-serif}.gs-style-enabler .chaosEquiv,.gs-style-enabler .gs-item-handle{font-family:Oswald,sans-serif}.gs-style-enabler .item .real-sort.gs-style:hover{color:#fff}.gs-style-enabler tr.cell-second td.gs-style,.gs-style-enabler tr.cell-second th.gs-style{background-color:#e8eff2}.gs-style-enabler tr.cell-second th.gs-style{border-bottom:none;border-bottom-left-radius:0;border-bottom-right-radius:0}.gs-style-enabler tr.cell-second td.gs-style{border-top:none;border-top-left-radius:0;border-top-right-radius:0}.gs-style-enabler .hide{display:none}.gs-style-enabler .nowrap{white-space:nowrap}.gs-style-enabler .tippy-content a{color:#222}.gs-style-enabler .form-group.disabled label{color:#6c757d}.gs-load.gs-style,.gs-multi.gs-style,.gs-save.gs-style{margin-left:7px}.live-search-box.alert-box .gs-load.gs-style,.live-search-box.alert-box .gs-multi.gs-style,.live-search-box.alert-box .gs-save.gs-style{margin-left:0;margin-right:7px}.gs-save.gs-style{padding:0 7px}.gs-load.gs-style{padding:0 5px}.gs-multi.gs-style{padding:0 6px}.tippy-content a{color:#fff}.currencySettings .itemSettingsOnly,.itemSettings .currencySettingsOnly{display:none}.curr-table img{height:22px}.poeOffSite .alert-box.live-search{margin:3px 8px;font-weight:700}.poeOffSite.gs-style-enabler #trade .gs-style a,.poeOffSite.gs-style-enabler #trade .gs-style-light a{color:#09c}.poeOffSite.gs-style-enabler .gs-style-light{font-size:.9em}.poeOffSite.gs-style-enabler div.gs-wrapper{line-height:32px}.poeOffSite.gs-search-tab .gs-multi.hide{display:inline!important}.poeOffSite.gs-exchange-tab .copied{font-style:italic}.poeOffSite.gs-exchange-tab .copied:after{content:' copied'}.poeOffSite #trade .results .search-bar .details .price .gs-wrapper img,.poeOffSite .results #trade .search-bar .details .price .gs-wrapper img,.poeOffSite .results .row .details .price .gs-wrapper img{width:22px;vertical-align:sub}.poeOffSite .linkBack{min-width:359px}.poeOffSite .nav-tabs .pteSettings{height:32px;float:right}.poeOffSite .chaosEquiv,.poeOffSite .gs-item-handle{padding:3px 7px;cursor:pointer}.poeOffSite .tippy-content{font-size:1.6em}.poeOffSite .tippy-content .currency-image img{width:22px}.poeOffSite .gs-load.gs-style,.poeOffSite .gs-multi.gs-style,.poeOffSite .gs-save.gs-style{cursor:pointer}.poeOffSite .controls .gs-load,.poeOffSite .controls .gs-multi,.poeOffSite .controls .gs-save{margin-left:0;margin-right:5px}.poeOffSite #trade .controls.saveManager .controls-left{width:25%!important}.poeOffSite #trade .controls.saveManager .controls-right{width:45%!important}.poeOffSite #trade .controls.saveManager .controls-center{width:30%!important}@media (max-width:800px){.poeOffSite #trade .controls.saveManager .controls-left{width:50%!important}.poeOffSite #trade .controls.saveManager .controls-right{width:100%!important}.poeOffSite #trade .controls.saveManager .controls-center{width:50%!important}}.alert-box.live-search{padding:3px 5px}</style>
+  <style>.gs-style-enabler .gs-frame,.gs-style-enabler .gs-style{background-color:#e8eff2;border:1px dashed #111;border-radius:5px;padding:5px}.gs-style-enabler .gs-style{background-color:#e8eff2;color:#222;padding:1px 2px}.gs-style-enabler .gs-style a{color:#09c;text-decoration:underline dashed}.gs-style-enabler .gs-style-light{font-size:.8em;font-style:italic;opacity:.9;background-color:#fff;line-height:1.2em}.gs-style a,a.gs-style{cursor:pointer}body.frame-setting-frame{background-color:#e8eff2}a i.fas{cursor:pointer}.gs-frame{width:90%;min-height:300px;max-width:900px;height:85%;position:fixed;left:50%;transform:translateX(-50%);top:7.5%;z-index:100001}.gs-backdrop{width:100%;min-height:300px;height:100%;position:fixed;left:0;top:0;z-index:100000;background:rgba(255,255,255,.3)}.hide{display:none}.nowrap{white-space:nowrap}.gs-pull-right{float:right}.gs-pull-left{float:left}.tippy-content a{color:#222}.patreon-button img{height:47px;border-radius:1.5rem}.paypal-form{padding-bottom:0;margin-bottom:-6px}#saved-alert{position:fixed;z-index:0;padding-left:0;padding-right:30px}.modal-dialog.modal-xl{max-width:90%}</style>
+  <style>body,html{height:100%}.currencyClicked{font-style:italic}.item .real-sort:hover{background:#000}.grouped-only,.proplist li.grouped-only{display:none}.grouped .grouped-only,.grouped .proplist li.grouped-only{display:inline}.marg-b-5{margin-bottom:5px}.marg-l-5{margin-left:5px}.title a.gs-style{padding:3px 5px;font-size:12px;line-height:12px;top:-6px;position:relative}.chaosEquiv,.gs-item-handle{margin-left:5px;padding:1px 2px;border:1px solid #fff;border-radius:5px;white-space:nowrap}.grouped .resultset .row.gs-group-member{display:none}.gs-style-enabler .title a.gs-style{color:#222}.gs-style-enabler .chaosEquiv,.gs-style-enabler .gs-item-handle,.gs-style-enabler .tippy-backdrop{background-color:#e8eff2;border:1px dashed #111;border-radius:5px}.gs-style-enabler .chaosEquiv,.gs-style-enabler .gs-item-handle,.gs-style-enabler .tippy-content{background-color:#e8eff2;color:#222}.gs-style-enabler a.gs-style:focus,.gs-style-enabler a.gs-style:hover{color:#222}.gs-style-enabler .gs-style{padding:1px 2px}.gs-style-enabler .gs-style.wiki-link{padding:0 2px}.gs-style-enabler .gs-style,.gs-style-enabler .tippy-content{font-family:Roboto,sans-serif}.gs-style-enabler .chaosEquiv,.gs-style-enabler .gs-item-handle{font-family:Oswald,sans-serif}.gs-style-enabler .item .real-sort.gs-style:hover{color:#fff}.gs-style-enabler tr.cell-second td.gs-style,.gs-style-enabler tr.cell-second th.gs-style{background-color:#e8eff2}.gs-style-enabler tr.cell-second th.gs-style{border-bottom:none;border-bottom-left-radius:0;border-bottom-right-radius:0}.gs-style-enabler tr.cell-second td.gs-style{border-top:none;border-top-left-radius:0;border-top-right-radius:0}.gs-style-enabler .hide{display:none}.gs-style-enabler .nowrap{white-space:nowrap}.gs-style-enabler .tippy-content a{color:#222}.gs-style-enabler .form-group.disabled label{color:#6c757d}.gs-load.gs-style,.gs-multi.gs-style,.gs-save.gs-style{margin-left:7px}.live-search-box.alert-box .gs-load.gs-style,.live-search-box.alert-box .gs-multi.gs-style,.live-search-box.alert-box .gs-save.gs-style{margin-left:0;margin-right:7px}.gs-save.gs-style{padding:0 7px}.gs-load.gs-style{padding:0 5px}.gs-multi.gs-style{padding:0 6px}.tippy-content a{color:#fff}.currencySettings .itemSettingsOnly,.itemSettings .currencySettingsOnly{display:none}.curr-table img{height:22px}.poeOffSite .alert-box.live-search{margin:3px 8px;font-weight:700}.poeOffSite.gs-style-enabler #trade .gs-style a,.poeOffSite.gs-style-enabler #trade .gs-style-light a{color:#09c}.poeOffSite.gs-style-enabler .gs-style-light{font-size:.9em}.poeOffSite.gs-style-enabler div.gs-wrapper{line-height:32px}.poeOffSite.gs-search-tab .gs-multi.hide{display:inline!important}.poeOffSite.gs-exchange-tab .copied{font-style:italic}.poeOffSite.gs-exchange-tab .copied:after{content:' copied'}.poeOffSite #trade .results .search-bar .details .price .gs-wrapper img,.poeOffSite .results #trade .search-bar .details .price .gs-wrapper img,.poeOffSite .results .row .details .price .gs-wrapper img{width:22px;vertical-align:sub}.poeOffSite .linkBack{min-width:359px}.poeOffSite .nav-tabs .pteSettings{height:32px;float:right}.poeOffSite .chaosEquiv,.poeOffSite .gs-item-handle{padding:3px 7px;cursor:pointer}.poeOffSite .tippy-content{font-size:1.6em}.poeOffSite .tippy-content .currency-image img{width:22px}.poeOffSite .gs-load.gs-style,.poeOffSite .gs-multi.gs-style,.poeOffSite .gs-save.gs-style{cursor:pointer}.poeOffSite .controls .gs-load,.poeOffSite .controls .gs-multi,.poeOffSite .controls .gs-save{margin-left:0;margin-right:5px}.poeOffSite #trade .controls.saveManager .controls-left{width:25%!important}.poeOffSite #trade .controls.saveManager .controls-right{width:45%!important}.poeOffSite #trade .controls.saveManager .controls-center{width:30%!important}@media (max-width:800px){.poeOffSite #trade .controls.saveManager .controls-left{width:50%!important}.poeOffSite #trade .controls.saveManager .controls-right{width:100%!important}.poeOffSite #trade .controls.saveManager .controls-center{width:50%!important}}.alert-box.live-search{padding:3px 5px}#ms-console-tip{text-align:left}.gs-danger{color:#dc3545!important}.gs-info{color:#17a2b8!important}.gs-warning{color:#ffc107!important}.gs-success{color:#28a745!important}.gs-quote{color:#6c757d!important;font-style:italic}</style>
 `;
 
 var donateTemplate = /* html */`
@@ -232,7 +233,7 @@ var frameContent = /* html */ `
     <div class="tab-content" id="myTabContent">
       <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
         <div class="">
-          <h2 class="">Poe Trade Enhancer <small class="text-secondary font-italic font-weight-light">v. 1.3.0</small></h2>
+          <h2 class="">Poe Trade Enhancer <small class="text-secondary font-italic font-weight-light">v. 1.3.78</small></h2>
           ${shortDescriptionParagraph}
           <hr class="my-4">
           ${donateTemplate}
@@ -952,7 +953,7 @@ var endInit = function() {
 };
 
 
-info("version: 1.3.0");
+info("version: 1.3.78");
 
 
 
@@ -1335,6 +1336,7 @@ var openSearch = function(search, newTab, target) {
 
 var connections = [];
 var liveSearches = [];
+var old_uniqs = [];
 var stopSocket = function (index) {
   debug("Stopped socket "+index);
   connections[index].close();
@@ -1418,16 +1420,15 @@ var openMultiSearch = function(searches, names) {
   var fetches = [];
   var getDeferredSearchId = function(name, search, retry) {
     var deferred = $.Deferred();
-    var xhr = new XMLHttpRequest();
-    var success = function(response, text, jqXHR) {
-      debug("getDeferredSearchId.DONE FETCHING: "+name, jqXHR, jqXHR.getAllResponseHeaders(), xhr, xhr.responseURL);
-      deferred.resolve(xhr.responseURL);
+    var success = function(finalUrl) {
+      deferred.resolve(finalUrl);
     };
     var failure = function(error) {
       if (retry > 0) {
-        debug("getDeferredSearchId.FAIL FETCHING, RETRY - "+name, error);
+        debug("getDeferredSearchId.FAIL FETCHING, RETRY " + retry + " - "+name, error);
+        retry--;
         setTimeout(function(){
-          var innerDeferred = getDeferredSearchId(name, search, retry -1);
+          var innerDeferred = getDeferredSearchId(name, search, retry);
           innerDeferred.done(success).fail(failure);
         }, 300);
       } else {
@@ -1435,15 +1436,28 @@ var openMultiSearch = function(searches, names) {
         deferred.reject(error);
       }
     };
-    $.ajax({
+    GM_xmlhttpRequest({
+      method: "POST",
       url: window.location.protocol + "//poe.trade/search",
-      type: 'POST',
       data: search,
-      contentType: "application/x-www-form-urlencoded",
-      xhr: function() {
-           return xhr;
+      onload: function(gmXHR) {
+        debug("getDeferredSearchId.DONE FETCHING: "+name, gmXHR);
+        if (gmXHR && gmXHR.finalUrl) {
+          success(gmXHR.finalUrl);
+        } else {
+          failure(gmXHR);
+        }
+      },
+      onerror: function (gmXHR) {
+        var match = /^Refused to connect to \"https?:(\/\/.*)\": Request was redirected to a not whitelisted URL$/.exec((gmXHR && gmXHR.error) ? gmXHR.error : "");
+        if (match && match.length > 0) {
+          debug("getDeferredSearchId.INTERCEPTED FETCHING: "+name, gmXHR);
+          success(window.location.protocol + match[1]);
+        } else {
+          failure(gmXHR);
+        }
       }
-    }).done(success).fail(failure);
+    });
     return deferred;
   };
 
@@ -1457,6 +1471,9 @@ var openMultiSearch = function(searches, names) {
     startAllSockets(arguments);
   }, function() {
     console.error("getDeferredSearchId.FAIL ALL FETCHED: ", arguments);
+    $.each( searches, function( i, search ) {
+      socketStatus(i, "failed");
+    });
   });
   close();
 };
@@ -1464,7 +1481,7 @@ var openMultiSearch = function(searches, names) {
 var startAllSockets = function (resources) {
   startLiveConsole();
   $.each( resources, function( index, res ) {
-    var connection = startSocket(index, res);
+    setTimeout(function(){ var connection = startSocket(index, res); }, (index * 300) + 100);
   });
 };
 
@@ -1476,6 +1493,21 @@ var startSocket = function(index, res) {
   } else {
       url = "ws://live.poe.trade/";
   }
+
+  function multino_pong_received(index) {
+    stopSocket(index);
+    socketStatus(index, "stopped");
+  }
+
+  function multiping_socket(index) {
+      if (connections[index]) {
+          connections[index].send("ping");
+          liveSearches[index].pong_timeout = setTimeout(function () {
+            multino_pong_received(index);
+          }, 3 * 1000);
+      }
+  }
+
 
   var multisubscribe = function (uniqs, index) {
       for (var i = 0; i < uniqs.length; ++i)
@@ -1515,15 +1547,26 @@ var startSocket = function(index, res) {
 
   debug("WS - About to live search: "+res);
   liveSearches.push({url: res, last_displayed_id: -1});
+  multilive_kick(index);
   var connection = new WebSocket(res.replace(/^.*search\//,url));
   connection.onopen = function(event) {
+
+    liveSearches[index].socket_ping_timer = setInterval(function () {
+      multiping_socket(index);
+    }, 60 * 1000);
+    liveSearches[index].socket_connect_tries = 0;
+    connection.send('{"type": "version", "value": 3}');
+    multiping_socket(index);
+    debug("restoring uniqs: " + old_uniqs + " for search " + index);
+    multisubscribe(old_uniqs, index);
+
     debug("WS - Opened connection to: "+res, event);
     socketStatus(index, "connected");
   };
   connection.onmessage = function(event) {
     debug("WS - message from:" + res, event);
-    socketStatus(index, "working");
     var msg = $.parseJSON(event.data);
+    socketStatus(index, (typeof msg != "number" && msg && msg.type && msg.type == "pong") ? "pinged" : "working");
     if (typeof msg == "number") {
         liveSearches[index].last_known_id = Math.max(liveSearches[index].last_known_id, msg);
         multilive_kick(index);
@@ -1532,7 +1575,7 @@ var startSocket = function(index, res) {
     switch (msg.type) {
         case "pong":
             // $("#live-status").text("Connected!");
-            // clearTimeout(pong_timeout);
+            clearTimeout(liveSearches[index].pong_timeout);
             break;
         case "notify":
             liveSearches[index].last_known_id = Math.max(liveSearches[index].last_known_id, msg.value);
@@ -1550,6 +1593,8 @@ var startSocket = function(index, res) {
   connection.onclose = function(event) {
     socketStatus(index, "stopped");
     warn("WS - Error from: "+res, event);
+
+    clearInterval(liveSearches[index].socket_ping_timer);
   };
   connections.push(connection);
   return connection;
@@ -2529,9 +2574,10 @@ var filterSearch = function(iframe) {
   });
 };
 
-var sockets = [], msConsole, msConsoleIntervalId;
+var sockets = [], msConsole, msConsoleIntervalId, msConsoleStopped;
 
 var setupMultiSearchConsole = function(holder, names, noplay) {
+  msConsoleStopped = false;
   sockets = [];
   msConsole = $(/* html */ `
     <span id="ms-console"><span id="sockets-status">starting...</span> - <span id="working-sockets">0</span> of ${names.length} WebSockets working - <a id="sockets-start-all" class="hide"><i class="fas fa-play"></i> restart</a><a id="sockets-stop-all" class="hide"><i class="fas fa-stop"></i> stop</a> <span id="ms-console-tip-wrapper" class="hide"></span></span>
@@ -2567,6 +2613,7 @@ var setupMultiSearchConsole = function(holder, names, noplay) {
     $('#sockets-stop-all').removeClass("hide");
     $('#sockets-stop-all').on("click", function () {
       $('#sockets-stop-all,#sockets-start-all').toggleClass("hide");
+      msConsoleStopped = true;
       stopAllSockets();
     });
     $('#sockets-start-all').on("click", function () {
@@ -2574,6 +2621,7 @@ var setupMultiSearchConsole = function(holder, names, noplay) {
       var resources = sockets.map(function (x) {
         return x.resource;
       });
+      msConsoleStopped = false;
       startAllSockets(resources);
     });
   }
@@ -2594,9 +2642,18 @@ var fetchedSocket = function(index, res) {
 };
 
 var socketStatus = function(index, status) {
-  sockets[index].status = status;
-  if (status == "working") {
+  sockets[index].lastWasAPing = (status == "pinged");
+  sockets[index].status = (status == "pinged") ? "working" : status;
+  if (sockets[index].status == "working" ) {
     sockets[index].lastMessage = moment().valueOf();
+    sockets[index].retry = null;
+  } else if (status == "stopped" && !msConsoleStopped) {
+    if (!sockets[index].retry) {
+      sockets[index].retry = 1;
+    } else {
+      sockets[index].retry = sockets[index].retry * 10;
+    }
+    sockets[index].retryId = setTimeout(function(){ startSocket(index, sockets[index].resource); }, sockets[index].retry * 1000);
   }
   updateSocketStatus();
 };
@@ -2610,6 +2667,15 @@ var updateSocketStatus = function() {
     switch (s.status) {
       case "stopped":
         $(`#ms-console-tip-${i}`).removeClass("gs-danger gs-info gs-warning gs-success").addClass("gs-danger");
+        if (sockets[i].retry && !msConsoleStopped) {
+          $(`#ms-console-tip-last-${i}`).text(`Reconnecting in ${sockets[i].retry} seconds`);
+        }
+        if (sockets[i].retryId && msConsoleStopped) {
+          clearTimeout(sockets[i].retryId);
+        }
+        break;
+      case "failed":
+        $(`#ms-console-tip-${i}`).removeClass("gs-danger gs-info gs-warning gs-success").addClass("gs-danger");
         break;
       case "fetched":
       case "connected":
@@ -2621,13 +2687,16 @@ var updateSocketStatus = function() {
           $(`#ms-console-tip-last-${i}`).text("never received data from server");
         } else if (moment.duration(moment().diff(lastMsg)).asMinutes() > 1) {
           $(`#ms-console-tip-${i}`).removeClass("gs-danger gs-info gs-warning gs-success").addClass("gs-warning");
-          $(`#ms-console-tip-last-${i}`).text("last message older then 1 minute");
+          $(`#ms-console-tip-last-${i}`).text((s.lastWasAPing ? "last ping " : "last message ")+"older then 1 minute");
         } else {
           $(`#ms-console-tip-${i}`).removeClass("gs-danger gs-info gs-warning gs-success").addClass("gs-success");
-          $(`#ms-console-tip-last-${i}`).text("last message "+moment.duration(moment().diff(lastMsg)).seconds()+" seconds ago");
+          $(`#ms-console-tip-last-${i}`).text((s.lastWasAPing ? "pinged " : "last message ")+moment.duration(moment().diff(lastMsg)).seconds()+" seconds ago");
         }
         break;
     }
+  });
+  var failed = sockets.filter(function (x) {
+    return x.status == "failed";
   });
   var stopped = sockets.filter(function (x) {
     return x.status == "stopped";
@@ -2644,7 +2713,11 @@ var updateSocketStatus = function() {
   var workingOrConnected = sockets.filter(function (x) {
     return x.status == "working" || x.status == "connected";
   });
-  if (stopped.length == sockets.length) {
+  if (failed.length == sockets.length) {
+    $(`#sockets-status`).text("failed").removeClass("gs-danger gs-info gs-warning gs-success").addClass("gs-danger");
+  } else if (failed.length > 0) {
+    $(`#sockets-status`).text("some failed").removeClass("gs-danger gs-info gs-warning gs-success").addClass("gs-warning");
+  } else if (stopped.length == sockets.length) {
     $(`#sockets-status`).text("stopped").removeClass("gs-danger gs-info gs-warning gs-success").addClass("gs-danger");
   } else if (stopped.length > 0) {
     $(`#sockets-status`).text("some stopped").removeClass("gs-danger gs-info gs-warning gs-success").addClass("gs-warning");
