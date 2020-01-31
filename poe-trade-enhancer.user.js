@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         poe-trade-enhancer
 // @namespace    https://github.com/ghostscript3r/poe-trade-enhancer
-// @version      1.3.78
+// @version      1.3.379
 // @description  Adds tons of usefull features to poe.trade, from a very easy to use save manager to save and laod your searches and even live search them all in one page, to an auto sort by real currency values (from poe.ninja), passing from gems max quality cost and more. I have some other very good idea for features to add, I'll gladly push them forward if I see people start using this.
 // @author       ghostscript3r@gmail.com | https://www.patreon.com/ghostscripter
 // @license      MIT
@@ -12,6 +12,7 @@
 // @match        https://currency.poe.trade/*
 // @require      https://greasyfork.org/scripts/387585-jqueryeditable/code/jqueryeditable.js?version=717975
 // @require      https://greasyfork.org/scripts/373124-gm4-polyfill-mach6-legacy/code/gm4-polyfill-mach6-legacy.js?version=635792
+// @require      https://cdnjs.cloudflare.com/ajax/libs/async/3.1.0/async.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js
 // @require      https://unpkg.com/tippy.js@3/dist/tippy.all.min.js
 // @require      https://cdn.jsdelivr.net/npm/lodash@4.17.11/lodash.min.js
@@ -33,8 +34,9 @@
 
   var fontsCSS = GM_getResourceText("fontsCSS");
   GM_addStyle (fontsCSS);
-  GM_addStyle(`.gs-style-enabler .gs-frame,.gs-style-enabler .gs-style{background-color:#e8eff2;border:1px dashed #111;border-radius:5px;padding:5px}.gs-style-enabler .gs-style{background-color:#e8eff2;color:#222;padding:1px 2px}.gs-style-enabler .gs-style a{color:#09c;text-decoration:underline dashed}.gs-style-enabler .gs-style-light{font-size:.8em;font-style:italic;opacity:.9;background-color:#fff;line-height:1.2em}.gs-style a,a.gs-style{cursor:pointer}body.frame-setting-frame{background-color:#e8eff2}a i.fas{cursor:pointer}.gs-frame{width:90%;min-height:300px;max-width:900px;height:85%;position:fixed;left:50%;transform:translateX(-50%);top:7.5%;z-index:100001}.gs-backdrop{width:100%;min-height:300px;height:100%;position:fixed;left:0;top:0;z-index:100000;background:rgba(255,255,255,.3)}.hide{display:none}.nowrap{white-space:nowrap}.gs-pull-right{float:right}.gs-pull-left{float:left}.tippy-content a{color:#222}.patreon-button img{height:47px;border-radius:1.5rem}.paypal-form{padding-bottom:0;margin-bottom:-6px}#saved-alert{position:fixed;z-index:0;padding-left:0;padding-right:30px}.modal-dialog.modal-xl{max-width:90%}`);
-  GM_addStyle(`body,html{height:100%}.currencyClicked{font-style:italic}.item .real-sort:hover{background:#000}.grouped-only,.proplist li.grouped-only{display:none}.grouped .grouped-only,.grouped .proplist li.grouped-only{display:inline}.marg-b-5{margin-bottom:5px}.marg-l-5{margin-left:5px}.title a.gs-style{padding:3px 5px;font-size:12px;line-height:12px;top:-6px;position:relative}.chaosEquiv,.gs-item-handle{margin-left:5px;padding:1px 2px;border:1px solid #fff;border-radius:5px;white-space:nowrap}.grouped .resultset .row.gs-group-member{display:none}.gs-style-enabler .title a.gs-style{color:#222}.gs-style-enabler .chaosEquiv,.gs-style-enabler .gs-item-handle,.gs-style-enabler .tippy-backdrop{background-color:#e8eff2;border:1px dashed #111;border-radius:5px}.gs-style-enabler .chaosEquiv,.gs-style-enabler .gs-item-handle,.gs-style-enabler .tippy-content{background-color:#e8eff2;color:#222}.gs-style-enabler a.gs-style:focus,.gs-style-enabler a.gs-style:hover{color:#222}.gs-style-enabler .gs-style{padding:1px 2px}.gs-style-enabler .gs-style.wiki-link{padding:0 2px}.gs-style-enabler .gs-style,.gs-style-enabler .tippy-content{font-family:Roboto,sans-serif}.gs-style-enabler .chaosEquiv,.gs-style-enabler .gs-item-handle{font-family:Oswald,sans-serif}.gs-style-enabler .item .real-sort.gs-style:hover{color:#fff}.gs-style-enabler tr.cell-second td.gs-style,.gs-style-enabler tr.cell-second th.gs-style{background-color:#e8eff2}.gs-style-enabler tr.cell-second th.gs-style{border-bottom:none;border-bottom-left-radius:0;border-bottom-right-radius:0}.gs-style-enabler tr.cell-second td.gs-style{border-top:none;border-top-left-radius:0;border-top-right-radius:0}.gs-style-enabler .hide{display:none}.gs-style-enabler .nowrap{white-space:nowrap}.gs-style-enabler .tippy-content a{color:#222}.gs-style-enabler .form-group.disabled label{color:#6c757d}.gs-load.gs-style,.gs-multi.gs-style,.gs-save.gs-style{margin-left:7px}.live-search-box.alert-box .gs-load.gs-style,.live-search-box.alert-box .gs-multi.gs-style,.live-search-box.alert-box .gs-save.gs-style{margin-left:0;margin-right:7px}.gs-save.gs-style{padding:0 7px}.gs-load.gs-style{padding:0 5px}.gs-multi.gs-style{padding:0 6px}.tippy-content a{color:#fff}.currencySettings .itemSettingsOnly,.itemSettings .currencySettingsOnly{display:none}.curr-table img{height:22px}.poeOffSite .alert-box.live-search{margin:3px 8px;font-weight:700}.poeOffSite.gs-style-enabler #trade .gs-style a,.poeOffSite.gs-style-enabler #trade .gs-style-light a{color:#09c}.poeOffSite.gs-style-enabler .gs-style-light{font-size:.9em}.poeOffSite.gs-style-enabler div.gs-wrapper{line-height:32px}.poeOffSite.gs-search-tab .gs-multi.hide{display:inline!important}.poeOffSite.gs-exchange-tab .copied{font-style:italic}.poeOffSite.gs-exchange-tab .copied:after{content:' copied'}.poeOffSite #trade .results .search-bar .details .price .gs-wrapper img,.poeOffSite .results #trade .search-bar .details .price .gs-wrapper img,.poeOffSite .results .row .details .price .gs-wrapper img{width:22px;vertical-align:sub}.poeOffSite .linkBack{min-width:359px}.poeOffSite .nav-tabs .pteSettings{height:32px;float:right}.poeOffSite .chaosEquiv,.poeOffSite .gs-item-handle{padding:3px 7px;cursor:pointer}.poeOffSite .tippy-content{font-size:1.6em}.poeOffSite .tippy-content .currency-image img{width:22px}.poeOffSite .gs-load.gs-style,.poeOffSite .gs-multi.gs-style,.poeOffSite .gs-save.gs-style{cursor:pointer}.poeOffSite .controls .gs-load,.poeOffSite .controls .gs-multi,.poeOffSite .controls .gs-save{margin-left:0;margin-right:5px}.poeOffSite #trade .controls.saveManager .controls-left{width:25%!important}.poeOffSite #trade .controls.saveManager .controls-right{width:45%!important}.poeOffSite #trade .controls.saveManager .controls-center{width:30%!important}@media (max-width:800px){.poeOffSite #trade .controls.saveManager .controls-left{width:50%!important}.poeOffSite #trade .controls.saveManager .controls-right{width:100%!important}.poeOffSite #trade .controls.saveManager .controls-center{width:50%!important}}.alert-box.live-search{padding:3px 5px}#ms-console-tip{text-align:left}.gs-danger{color:#dc3545!important}.gs-info{color:#17a2b8!important}.gs-warning{color:#ffc107!important}.gs-success{color:#28a745!important}.gs-quote{color:#6c757d!important;font-style:italic}`);
+  GM_addStyle(`.gs-style-enabler .gs-frame,.gs-style-enabler .gs-style{background-color:#e8eff2;border:1px dashed #111;border-radius:5px;padding:5px}.gs-style-enabler .gs-style{background-color:#e8eff2;color:#222;padding:1px 2px}.gs-style-enabler .gs-style a{color:#09c;text-decoration:underline dashed}.gs-style-enabler .gs-style.gs-warning{color:#856404;background-color:#fff3cd;border-color:#856404}.gs-style-enabler .gs-style-light{font-size:.8em;font-style:italic;opacity:.9;background-color:#fff;line-height:1.2em}.gs-style-enabler .gs-style-light.gs-style{padding:1px 5px}.gs-style a,a.gs-style{cursor:pointer}body.frame-setting-frame{background-color:#e8eff2}a i.fas{cursor:pointer}.gs-frame{width:90%;min-height:300px;max-width:900px;height:85%;position:fixed;left:50%;transform:translateX(-50%);top:7.5%;z-index:100001}.gs-backdrop{width:100%;min-height:300px;height:100%;position:fixed;left:0;top:0;z-index:100000;background:rgba(255,255,255,.3)}.hide{display:none}.nowrap{white-space:nowrap}.gs-pull-right{float:right}.gs-pull-left{float:left}.tippy-content a{color:#222}.patreon-button img{height:47px;border-radius:1.5rem}.paypal-form{padding-bottom:0;margin-bottom:-6px}#saved-alert{position:fixed;z-index:0;padding-left:0;padding-right:30px}.modal-dialog.modal-xl{max-width:90%}`);
+  GM_addStyle(`body,html{height:100%}.currencyClicked{font-style:italic}.item .real-sort:hover{background:#000}.grouped-only,.proplist li.grouped-only{display:none}.grouped .grouped-only,.grouped .proplist li.grouped-only{display:inline}.marg-b-5{margin-bottom:5px}.marg-l-5{margin-left:5px}.marg-lr-8{margin-left:8px;margin-right:8px}.title a.gs-style{padding:3px 5px;font-size:12px;line-height:12px;top:-6px;position:relative}.chaosEquiv,.gs-item-handle{margin-left:5px;padding:1px 2px;border:1px solid #fff;border-radius:5px;white-space:nowrap}.grouped .resultset .row.gs-group-member{display:none}.gs-style-enabler .title a.gs-style{color:#222}.gs-style-enabler .chaosEquiv,.gs-style-enabler .gs-item-handle,.gs-style-enabler .tippy-backdrop{background-color:#e8eff2;border:1px dashed #111;border-radius:5px}.gs-style-enabler .chaosEquiv,.gs-style-enabler .gs-item-handle,.gs-style-enabler .tippy-content{background-color:#e8eff2;color:#222}.gs-style-enabler a.gs-style:focus,.gs-style-enabler a.gs-style:hover{color:#222}.gs-style-enabler .gs-style{padding:1px 2px}.gs-style-enabler .gs-style.wiki-link{padding:0 2px}.gs-style-enabler .gs-style,.gs-style-enabler .tippy-content{font-family:Roboto,sans-serif}.gs-style-enabler .chaosEquiv,.gs-style-enabler .gs-item-handle{font-family:Oswald,sans-serif}.gs-style-enabler .item .real-sort.gs-style:hover{color:#fff}.gs-style-enabler tr.cell-second td.gs-style,.gs-style-enabler tr.cell-second th.gs-style{background-color:#e8eff2}.gs-style-enabler tr.cell-second th.gs-style{border-bottom:none;border-bottom-left-radius:0;border-bottom-right-radius:0}.gs-style-enabler tr.cell-second td.gs-style{border-top:none;border-top-left-radius:0;border-top-right-radius:0}.gs-style-enabler .hide{display:none}.gs-style-enabler .nowrap{white-space:nowrap}.gs-style-enabler .tippy-content a{color:#222}.gs-style-enabler .form-group.disabled label{color:#6c757d}.gs-load.gs-style,.gs-multi.gs-style,.gs-save.gs-style{margin-left:7px}.live-search-box.alert-box .gs-load.gs-style,.live-search-box.alert-box .gs-multi.gs-style,.live-search-box.alert-box .gs-save.gs-style{margin-left:0;margin-right:7px}.gs-save.gs-style{padding:0 7px}.gs-load.gs-style{padding:0 5px}.gs-multi.gs-style{padding:0 6px}.tippy-content a{color:#fff}.currencySettings .itemSettingsOnly,.itemSettings .currencySettingsOnly{display:none}.curr-table img{height:22px}.poeOffSite .alert-box.live-search{margin:3px 8px;font-weight:700}.poeOffSite.gs-style-enabler #trade .gs-style a,.poeOffSite.gs-style-enabler #trade .gs-style-light a{color:#09c}.poeOffSite.gs-style-enabler .gs-style-light{font-size:.9em}.poeOffSite.gs-style-enabler div.gs-wrapper{line-height:32px}.poeOffSite.gs-search-tab .gs-multi.hide{display:inline!important}.poeOffSite.gs-exchange-tab .copied{font-style:italic}.poeOffSite.gs-exchange-tab .copied:after{content:' copied'}.poeOffSite #trade .results .search-bar .details .price .gs-wrapper img,.poeOffSite .results #trade .search-bar .details .price .gs-wrapper img,.poeOffSite .results .row .details .price .gs-wrapper img{width:22px;vertical-align:sub}.poeOffSite .linkBack{min-width:359px}.poeOffSite .nav-tabs .pteSettings{height:32px;float:right}.poeOffSite .chaosEquiv,.poeOffSite .gs-item-handle{padding:3px 7px;cursor:pointer}.poeOffSite .tippy-content{font-size:1.6em}.poeOffSite .tippy-content .currency-image img{width:22px}.poeOffSite .gs-load.gs-style,.poeOffSite .gs-multi.gs-style,.poeOffSite .gs-save.gs-style{cursor:pointer}.poeOffSite .controls .gs-load,.poeOffSite .controls .gs-multi,.poeOffSite .controls .gs-save{margin-left:0;margin-right:5px}.poeOffSite #trade .controls.saveManager .controls-left{width:25%!important}.poeOffSite #trade .controls.saveManager .controls-right{width:45%!important}.poeOffSite #trade .controls.saveManager .controls-center{width:30%!important}@media (max-width:800px){.poeOffSite #trade .controls.saveManager .controls-left{width:50%!important}.poeOffSite #trade .controls.saveManager .controls-right{width:100%!important}.poeOffSite #trade .controls.saveManager .controls-center{width:50%!important}}.alert-box.live-search{padding:3px 5px}#ms-console-tip{text-align:left}.gs-danger{color:#dc3545!important}.gs-info{color:#17a2b8!important}.gs-warning{color:#856404!important}.gs-success{color:#28a745!important}.gs-quote{color:#6c757d!important;font-style:italic}.middle-list{padding-top:90px;padding-bottom:90px}.frame-load-frame .fixed-bottom,.frame-load-frame .fixed-top,.frame-multi-frame .fixed-bottom,.frame-multi-frame .fixed-top{background:rgba(255,255,255,.95)}.frame-load-frame .table-responsive,.frame-multi-frame .table-responsive{overflow-x:visible}`);
+  GM_addStyle(`.colorPicker{width:16px;height:16px;position:relative;clear:both;margin:0}.colorPicker .track{background:#efefef url(https://raw.githubusercontent.com/ghostscript3r/poe-trade-enhancer/master/images/text-color.png) no-repeat 50% 50%;background-image:url(https://raw.githubusercontent.com/ghostscript3r/poe-trade-enhancer/master/images/text-color.png);height:150px;width:150px;padding:0;position:absolute;cursor:crosshair;float:left;left:-67px;top:-67px;display:none;border:1px solid #ccc;z-index:10;-webkit-border-radius:150px;-moz-border-radius:150px;border-radius:150px}.colorPicker .color{width:16px;height:16px;padding:0;border:1px solid #ccc;display:block;position:relative;z-index:11;background-color:#efefef;-webkit-border-radius:27px;-moz-border-radius:27px;border-radius:27px;cursor:pointer}.colorPicker .colorInner{width:14px;height:14px;-webkit-border-radius:27px;-moz-border-radius:27px;border-radius:27px}.colorPicker .dropdown{list-style:none;display:none;width:27px;position:absolute;top:28px;border:1px solid #ccc;left:0;z-index:1000}.colorPicker .dropdown li{height:25px;cursor:pointer}`);
 
   // GM_addStyle('table.masters img {width: 28px;}');
 
@@ -168,8 +170,9 @@ var frameTemplate = /* html */`
     };
     loop();
   </script>
-  <style>.gs-style-enabler .gs-frame,.gs-style-enabler .gs-style{background-color:#e8eff2;border:1px dashed #111;border-radius:5px;padding:5px}.gs-style-enabler .gs-style{background-color:#e8eff2;color:#222;padding:1px 2px}.gs-style-enabler .gs-style a{color:#09c;text-decoration:underline dashed}.gs-style-enabler .gs-style-light{font-size:.8em;font-style:italic;opacity:.9;background-color:#fff;line-height:1.2em}.gs-style a,a.gs-style{cursor:pointer}body.frame-setting-frame{background-color:#e8eff2}a i.fas{cursor:pointer}.gs-frame{width:90%;min-height:300px;max-width:900px;height:85%;position:fixed;left:50%;transform:translateX(-50%);top:7.5%;z-index:100001}.gs-backdrop{width:100%;min-height:300px;height:100%;position:fixed;left:0;top:0;z-index:100000;background:rgba(255,255,255,.3)}.hide{display:none}.nowrap{white-space:nowrap}.gs-pull-right{float:right}.gs-pull-left{float:left}.tippy-content a{color:#222}.patreon-button img{height:47px;border-radius:1.5rem}.paypal-form{padding-bottom:0;margin-bottom:-6px}#saved-alert{position:fixed;z-index:0;padding-left:0;padding-right:30px}.modal-dialog.modal-xl{max-width:90%}</style>
-  <style>body,html{height:100%}.currencyClicked{font-style:italic}.item .real-sort:hover{background:#000}.grouped-only,.proplist li.grouped-only{display:none}.grouped .grouped-only,.grouped .proplist li.grouped-only{display:inline}.marg-b-5{margin-bottom:5px}.marg-l-5{margin-left:5px}.title a.gs-style{padding:3px 5px;font-size:12px;line-height:12px;top:-6px;position:relative}.chaosEquiv,.gs-item-handle{margin-left:5px;padding:1px 2px;border:1px solid #fff;border-radius:5px;white-space:nowrap}.grouped .resultset .row.gs-group-member{display:none}.gs-style-enabler .title a.gs-style{color:#222}.gs-style-enabler .chaosEquiv,.gs-style-enabler .gs-item-handle,.gs-style-enabler .tippy-backdrop{background-color:#e8eff2;border:1px dashed #111;border-radius:5px}.gs-style-enabler .chaosEquiv,.gs-style-enabler .gs-item-handle,.gs-style-enabler .tippy-content{background-color:#e8eff2;color:#222}.gs-style-enabler a.gs-style:focus,.gs-style-enabler a.gs-style:hover{color:#222}.gs-style-enabler .gs-style{padding:1px 2px}.gs-style-enabler .gs-style.wiki-link{padding:0 2px}.gs-style-enabler .gs-style,.gs-style-enabler .tippy-content{font-family:Roboto,sans-serif}.gs-style-enabler .chaosEquiv,.gs-style-enabler .gs-item-handle{font-family:Oswald,sans-serif}.gs-style-enabler .item .real-sort.gs-style:hover{color:#fff}.gs-style-enabler tr.cell-second td.gs-style,.gs-style-enabler tr.cell-second th.gs-style{background-color:#e8eff2}.gs-style-enabler tr.cell-second th.gs-style{border-bottom:none;border-bottom-left-radius:0;border-bottom-right-radius:0}.gs-style-enabler tr.cell-second td.gs-style{border-top:none;border-top-left-radius:0;border-top-right-radius:0}.gs-style-enabler .hide{display:none}.gs-style-enabler .nowrap{white-space:nowrap}.gs-style-enabler .tippy-content a{color:#222}.gs-style-enabler .form-group.disabled label{color:#6c757d}.gs-load.gs-style,.gs-multi.gs-style,.gs-save.gs-style{margin-left:7px}.live-search-box.alert-box .gs-load.gs-style,.live-search-box.alert-box .gs-multi.gs-style,.live-search-box.alert-box .gs-save.gs-style{margin-left:0;margin-right:7px}.gs-save.gs-style{padding:0 7px}.gs-load.gs-style{padding:0 5px}.gs-multi.gs-style{padding:0 6px}.tippy-content a{color:#fff}.currencySettings .itemSettingsOnly,.itemSettings .currencySettingsOnly{display:none}.curr-table img{height:22px}.poeOffSite .alert-box.live-search{margin:3px 8px;font-weight:700}.poeOffSite.gs-style-enabler #trade .gs-style a,.poeOffSite.gs-style-enabler #trade .gs-style-light a{color:#09c}.poeOffSite.gs-style-enabler .gs-style-light{font-size:.9em}.poeOffSite.gs-style-enabler div.gs-wrapper{line-height:32px}.poeOffSite.gs-search-tab .gs-multi.hide{display:inline!important}.poeOffSite.gs-exchange-tab .copied{font-style:italic}.poeOffSite.gs-exchange-tab .copied:after{content:' copied'}.poeOffSite #trade .results .search-bar .details .price .gs-wrapper img,.poeOffSite .results #trade .search-bar .details .price .gs-wrapper img,.poeOffSite .results .row .details .price .gs-wrapper img{width:22px;vertical-align:sub}.poeOffSite .linkBack{min-width:359px}.poeOffSite .nav-tabs .pteSettings{height:32px;float:right}.poeOffSite .chaosEquiv,.poeOffSite .gs-item-handle{padding:3px 7px;cursor:pointer}.poeOffSite .tippy-content{font-size:1.6em}.poeOffSite .tippy-content .currency-image img{width:22px}.poeOffSite .gs-load.gs-style,.poeOffSite .gs-multi.gs-style,.poeOffSite .gs-save.gs-style{cursor:pointer}.poeOffSite .controls .gs-load,.poeOffSite .controls .gs-multi,.poeOffSite .controls .gs-save{margin-left:0;margin-right:5px}.poeOffSite #trade .controls.saveManager .controls-left{width:25%!important}.poeOffSite #trade .controls.saveManager .controls-right{width:45%!important}.poeOffSite #trade .controls.saveManager .controls-center{width:30%!important}@media (max-width:800px){.poeOffSite #trade .controls.saveManager .controls-left{width:50%!important}.poeOffSite #trade .controls.saveManager .controls-right{width:100%!important}.poeOffSite #trade .controls.saveManager .controls-center{width:50%!important}}.alert-box.live-search{padding:3px 5px}#ms-console-tip{text-align:left}.gs-danger{color:#dc3545!important}.gs-info{color:#17a2b8!important}.gs-warning{color:#ffc107!important}.gs-success{color:#28a745!important}.gs-quote{color:#6c757d!important;font-style:italic}</style>
+  <style>.gs-style-enabler .gs-frame,.gs-style-enabler .gs-style{background-color:#e8eff2;border:1px dashed #111;border-radius:5px;padding:5px}.gs-style-enabler .gs-style{background-color:#e8eff2;color:#222;padding:1px 2px}.gs-style-enabler .gs-style a{color:#09c;text-decoration:underline dashed}.gs-style-enabler .gs-style.gs-warning{color:#856404;background-color:#fff3cd;border-color:#856404}.gs-style-enabler .gs-style-light{font-size:.8em;font-style:italic;opacity:.9;background-color:#fff;line-height:1.2em}.gs-style-enabler .gs-style-light.gs-style{padding:1px 5px}.gs-style a,a.gs-style{cursor:pointer}body.frame-setting-frame{background-color:#e8eff2}a i.fas{cursor:pointer}.gs-frame{width:90%;min-height:300px;max-width:900px;height:85%;position:fixed;left:50%;transform:translateX(-50%);top:7.5%;z-index:100001}.gs-backdrop{width:100%;min-height:300px;height:100%;position:fixed;left:0;top:0;z-index:100000;background:rgba(255,255,255,.3)}.hide{display:none}.nowrap{white-space:nowrap}.gs-pull-right{float:right}.gs-pull-left{float:left}.tippy-content a{color:#222}.patreon-button img{height:47px;border-radius:1.5rem}.paypal-form{padding-bottom:0;margin-bottom:-6px}#saved-alert{position:fixed;z-index:0;padding-left:0;padding-right:30px}.modal-dialog.modal-xl{max-width:90%}</style>
+  <style>body,html{height:100%}.currencyClicked{font-style:italic}.item .real-sort:hover{background:#000}.grouped-only,.proplist li.grouped-only{display:none}.grouped .grouped-only,.grouped .proplist li.grouped-only{display:inline}.marg-b-5{margin-bottom:5px}.marg-l-5{margin-left:5px}.marg-lr-8{margin-left:8px;margin-right:8px}.title a.gs-style{padding:3px 5px;font-size:12px;line-height:12px;top:-6px;position:relative}.chaosEquiv,.gs-item-handle{margin-left:5px;padding:1px 2px;border:1px solid #fff;border-radius:5px;white-space:nowrap}.grouped .resultset .row.gs-group-member{display:none}.gs-style-enabler .title a.gs-style{color:#222}.gs-style-enabler .chaosEquiv,.gs-style-enabler .gs-item-handle,.gs-style-enabler .tippy-backdrop{background-color:#e8eff2;border:1px dashed #111;border-radius:5px}.gs-style-enabler .chaosEquiv,.gs-style-enabler .gs-item-handle,.gs-style-enabler .tippy-content{background-color:#e8eff2;color:#222}.gs-style-enabler a.gs-style:focus,.gs-style-enabler a.gs-style:hover{color:#222}.gs-style-enabler .gs-style{padding:1px 2px}.gs-style-enabler .gs-style.wiki-link{padding:0 2px}.gs-style-enabler .gs-style,.gs-style-enabler .tippy-content{font-family:Roboto,sans-serif}.gs-style-enabler .chaosEquiv,.gs-style-enabler .gs-item-handle{font-family:Oswald,sans-serif}.gs-style-enabler .item .real-sort.gs-style:hover{color:#fff}.gs-style-enabler tr.cell-second td.gs-style,.gs-style-enabler tr.cell-second th.gs-style{background-color:#e8eff2}.gs-style-enabler tr.cell-second th.gs-style{border-bottom:none;border-bottom-left-radius:0;border-bottom-right-radius:0}.gs-style-enabler tr.cell-second td.gs-style{border-top:none;border-top-left-radius:0;border-top-right-radius:0}.gs-style-enabler .hide{display:none}.gs-style-enabler .nowrap{white-space:nowrap}.gs-style-enabler .tippy-content a{color:#222}.gs-style-enabler .form-group.disabled label{color:#6c757d}.gs-load.gs-style,.gs-multi.gs-style,.gs-save.gs-style{margin-left:7px}.live-search-box.alert-box .gs-load.gs-style,.live-search-box.alert-box .gs-multi.gs-style,.live-search-box.alert-box .gs-save.gs-style{margin-left:0;margin-right:7px}.gs-save.gs-style{padding:0 7px}.gs-load.gs-style{padding:0 5px}.gs-multi.gs-style{padding:0 6px}.tippy-content a{color:#fff}.currencySettings .itemSettingsOnly,.itemSettings .currencySettingsOnly{display:none}.curr-table img{height:22px}.poeOffSite .alert-box.live-search{margin:3px 8px;font-weight:700}.poeOffSite.gs-style-enabler #trade .gs-style a,.poeOffSite.gs-style-enabler #trade .gs-style-light a{color:#09c}.poeOffSite.gs-style-enabler .gs-style-light{font-size:.9em}.poeOffSite.gs-style-enabler div.gs-wrapper{line-height:32px}.poeOffSite.gs-search-tab .gs-multi.hide{display:inline!important}.poeOffSite.gs-exchange-tab .copied{font-style:italic}.poeOffSite.gs-exchange-tab .copied:after{content:' copied'}.poeOffSite #trade .results .search-bar .details .price .gs-wrapper img,.poeOffSite .results #trade .search-bar .details .price .gs-wrapper img,.poeOffSite .results .row .details .price .gs-wrapper img{width:22px;vertical-align:sub}.poeOffSite .linkBack{min-width:359px}.poeOffSite .nav-tabs .pteSettings{height:32px;float:right}.poeOffSite .chaosEquiv,.poeOffSite .gs-item-handle{padding:3px 7px;cursor:pointer}.poeOffSite .tippy-content{font-size:1.6em}.poeOffSite .tippy-content .currency-image img{width:22px}.poeOffSite .gs-load.gs-style,.poeOffSite .gs-multi.gs-style,.poeOffSite .gs-save.gs-style{cursor:pointer}.poeOffSite .controls .gs-load,.poeOffSite .controls .gs-multi,.poeOffSite .controls .gs-save{margin-left:0;margin-right:5px}.poeOffSite #trade .controls.saveManager .controls-left{width:25%!important}.poeOffSite #trade .controls.saveManager .controls-right{width:45%!important}.poeOffSite #trade .controls.saveManager .controls-center{width:30%!important}@media (max-width:800px){.poeOffSite #trade .controls.saveManager .controls-left{width:50%!important}.poeOffSite #trade .controls.saveManager .controls-right{width:100%!important}.poeOffSite #trade .controls.saveManager .controls-center{width:50%!important}}.alert-box.live-search{padding:3px 5px}#ms-console-tip{text-align:left}.gs-danger{color:#dc3545!important}.gs-info{color:#17a2b8!important}.gs-warning{color:#856404!important}.gs-success{color:#28a745!important}.gs-quote{color:#6c757d!important;font-style:italic}.middle-list{padding-top:90px;padding-bottom:90px}.frame-load-frame .fixed-bottom,.frame-load-frame .fixed-top,.frame-multi-frame .fixed-bottom,.frame-multi-frame .fixed-top{background:rgba(255,255,255,.95)}.frame-load-frame .table-responsive,.frame-multi-frame .table-responsive{overflow-x:visible}</style>
+  <style>.colorPicker{width:16px;height:16px;position:relative;clear:both;margin:0}.colorPicker .track{background:#efefef url(https://raw.githubusercontent.com/ghostscript3r/poe-trade-enhancer/master/images/text-color.png) no-repeat 50% 50%;background-image:url(https://raw.githubusercontent.com/ghostscript3r/poe-trade-enhancer/master/images/text-color.png);height:150px;width:150px;padding:0;position:absolute;cursor:crosshair;float:left;left:-67px;top:-67px;display:none;border:1px solid #ccc;z-index:10;-webkit-border-radius:150px;-moz-border-radius:150px;border-radius:150px}.colorPicker .color{width:16px;height:16px;padding:0;border:1px solid #ccc;display:block;position:relative;z-index:11;background-color:#efefef;-webkit-border-radius:27px;-moz-border-radius:27px;border-radius:27px;cursor:pointer}.colorPicker .colorInner{width:14px;height:14px;-webkit-border-radius:27px;-moz-border-radius:27px;border-radius:27px}.colorPicker .dropdown{list-style:none;display:none;width:27px;position:absolute;top:28px;border:1px solid #ccc;left:0;z-index:1000}.colorPicker .dropdown li{height:25px;cursor:pointer}</style>
 `;
 
 var donateTemplate = /* html */`
@@ -233,7 +236,7 @@ var frameContent = /* html */ `
     <div class="tab-content" id="myTabContent">
       <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
         <div class="">
-          <h2 class="">Poe Trade Enhancer <small class="text-secondary font-italic font-weight-light">v. 1.3.78</small></h2>
+          <h2 class="">Poe Trade Enhancer <small class="text-secondary font-italic font-weight-light">v. 1.3.379</small></h2>
           ${shortDescriptionParagraph}
           <hr class="my-4">
           ${donateTemplate}
@@ -761,6 +764,51 @@ function execText(fn) {
 
 })(window);
 
+var randomize = function(n, perc) {
+  if (perc === undefined || perc === null) perc = 0.1;
+  if (perc <= 1) {
+  } else if (perc <= 100) {
+    perc = perc / 100;
+  } else {
+    perc = 0.1;
+  }
+  var min = n * (1 - perc), max = n * (1 + perc);
+  return ((Math.random() * (max - min)) + min);
+}
+
+
+var pacedWhen = function(deferredList, params) {
+  var options = {tick: 100, max: 2, failureThreshold: 0}, failed = 0, count = deferredList.length, deferred = $.Deferred(), results = [];
+  if (params) options = $.extend({}, options, params);
+
+  async.mapLimit(deferredList, options.max, function(q, mcb) {
+    setTimeout(function(){
+      debug("pacedWhen next element", q);
+      q().done(function(dt) {
+        debug("pacedWhen element done", q, dt);
+        mcb(null, dt);
+      }).fail(function(err) {
+        failed++;
+        if (failed/count <= options.failureThreshold) {
+          debug("pacedWhen element failed, but still under failure threshold", q, err);
+          mcb(null, null);
+        } else {
+          debug("pacedWhen element failed", q, err);
+          mcb(err, null);
+        }
+      });
+    }, options.tick);
+  }, function(merr, mresults) {
+    if (merr) {
+      deferred.reject(merr);
+    } else {
+      deferred.resolve(mresults);
+    }
+  });
+
+  return deferred;
+};
+
 
 var isSettingDisabled = function(key) {
   if (settings[key].parent) {
@@ -953,8 +1001,367 @@ var endInit = function() {
 };
 
 
-info("version: 1.3.78");
+info("version: 1.3.379");
 
+  ;(function(factory) {
+    if(typeof define === 'function' && define.amd) {
+        define(['jquery'], factory);
+    }
+    else if(typeof exports === 'object') {
+        module.exports = factory(require("jquery"));
+    }
+    else {
+        factory(jQuery);
+    }
+}
+(function($) {
+    var pluginName = "tinycolorpicker"
+    ,   defaults   = {
+            colors : ["#ffffff", "#A7194B","#FE2712","#FB9902","#FABC02","#FEFE33","#D0EA2B","#66B032","#0391CE","#0247FE","#3D01A5","#8601AF"]
+        ,   backgroundUrl : null
+        }
+    ;
+
+    function Plugin($container, options) {
+        /**
+         * The options of the colorpicker extended with the defaults.
+         *
+         * @property options
+         * @type Object
+         */
+        this.options = $.extend({}, defaults, options);
+
+        /**
+         * @property _defaults
+         * @type Object
+         * @private
+         * @default defaults
+         */
+        this._defaults = defaults;
+
+        /**
+         * @property _name
+         * @type String
+         * @private
+         * @final
+         * @default 'tinycolorpicker'
+         */
+        this._name = pluginName;
+
+        var self = this
+        ,   $track = $container.find(".track")
+        ,   $color = $container.find(".color")
+        ,   $colorInner = $container.find(".color .colorInner")
+        ,   $canvas = null
+        ,   $colorInput = $container.find(".colorInput")
+        ,   $dropdown = $container.find(".dropdown")
+        ,   $dropdownItem = $dropdown.find("li").remove()
+
+        ,   context = null
+        ,   mouseIsDown = false
+        ,   hasCanvas = !!document.createElement("canvas").getContext
+        ,   touchEvents = "ontouchstart" in document.documentElement
+        ;
+
+        /**
+         * The current active color in hex.
+         *
+         * @property colorHex
+         * @type String
+         * @default ""
+         */
+        this.colorHex = "";
+
+        /**
+         * The current active color in rgb.
+         *
+         * @property colorRGB
+         * @type String
+         * @default ""
+         */
+        this.colorRGB = "";
+
+        /**
+         * @method _initialize
+         * @private
+         */
+        function _initialize() {
+            if(hasCanvas) {
+                $canvas = $("<canvas></canvas>");
+                $track.append($canvas);
+
+                context = $canvas[0].getContext( "2d" );
+
+                _setImage();
+            }
+            else {
+                $.each(self.options.colors, function(index, color) {
+                    var $clone = $dropdownItem.clone();
+
+                    $clone.css("backgroundColor", color);
+                    $clone.attr("data-color", color);
+
+                    $dropdown.append($clone);
+                });
+            }
+
+            _setEvents();
+            if (self.options.color) {
+              self.originalColor = self.options.color;
+              self.setColor(self.options.color);
+            }
+
+            return self;
+        }
+
+        /**
+         * @method _setImage
+         * @private
+         */
+        function _setImage() {
+            var colorPicker = new Image(), backgroundUrl = $track.css("background-image");
+            debug("colorPicker backgroundUrl", backgroundUrl);
+            if (backgroundUrl) {
+              backgroundUrl = backgroundUrl.replace(/"/g, "").replace(/url\(|\)$/ig, "");
+            }
+            if (self.options.image) {
+              colorPicker = self.options.image;
+            }
+            $track.css("background-image", "none");
+
+            $(colorPicker).load(function() {
+                $canvas.attr("width", this.width);
+                $canvas.attr("height", this.height);
+
+                context.drawImage(colorPicker, 0, 0, this.width, this.height);
+            });
+
+            if (!self.options.image) {
+              colorPicker.crossOrigin = "Anonymous";
+              colorPicker.src = self.options.backgroundUrl || backgroundUrl;
+              debug(self.options.backgroundUrl || backgroundUrl);
+            }
+        }
+
+        /**
+         * @method _setEvents
+         * @private
+         */
+        function _setEvents() {
+            var eventType = touchEvents ? "touchstart" : "mousedown";
+
+            if(hasCanvas) {
+                $color.on(eventType, function(event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    $track.toggle();
+                    debug($track.is(":visible"));
+                    if ($track.is(":visible")) {
+                      $color.parents('body').on("mousedown.colorpicker", function(event) {
+                        $color.parents('body').off(".colorpicker");
+                        self._resetColor();
+                        self.close();
+                      });
+                    } else {
+                      _selectColor();
+
+                      $color.parents('body').off(".colorpicker");
+                      self.close();
+                    }
+                });
+
+                if(!touchEvents) {
+                    $canvas.mousedown(function(event) {
+                        mouseIsDown = true;
+
+                        _getColorCanvas(event);
+                        _selectColor();
+
+                        $color.parents('body').off(".colorpicker");
+                        self.close();
+
+                        return false;
+                    });
+
+                    $canvas.mousemove(_getColorCanvas);
+                }
+                else {
+                    $canvas.on("touchstart", function(event) {
+                        mouseIsDown = true;
+
+                        _getColorCanvas(event.originalEvent.touches[0]);
+
+                        return false;
+                    });
+
+                    $canvas.on("touchmove", function(event) {
+                        _getColorCanvas(event.originalEvent.touches[0]);
+
+                        return false;
+                    });
+
+                    $canvas.on("touchend", function(event) {
+                        self.close();
+
+                        return false;
+                    });
+                }
+            }
+            else {
+                $color.on("mousedown", function(event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    $dropdown.toggle();
+                });
+
+                $dropdown.delegate("li", "mousedown", function(event) {
+                    event.preventDefault();
+                    event.stopImmediatePropagation();
+
+                    var color = $(this).attr("data-color");
+
+                    self.setColor(color);
+
+                    $dropdown.hide();
+                });
+            }
+        }
+
+        /**
+         * @method _getColorCanvas
+         * @private
+         */
+         function _getColorCanvas(event) {
+           var $target = $(event.target)
+           ,   offset = $target.offset()
+           ,   colorData = context.getImageData(event.pageX - offset.left, event.pageY - offset.top, 1, 1).data
+           ;
+           if (colorData[3] == 0) {
+             self.setColor("");
+           } else {
+             self.setColor("rgb(" + colorData[0] + "," + colorData[1] + "," + colorData[2] + ")");
+           }
+
+         }
+
+        /**
+         * @method _selectColor
+         * @private
+         */
+         function _selectColor() {
+
+           self.originalColor = self.colorHex;
+
+           $container.trigger("change", [self.colorHex, self.colorRGB]);
+         }
+
+        /**
+         * Set the color to a given hex or rgb color.
+         *
+         * @method setColor
+         * @chainable
+         */
+         this.setColor = function(color) {
+           if (color == "") {
+             self.colorHex = "";
+             self.colorRGB = "";
+           } else if(color.indexOf("#") >= 0) {
+             self.colorHex = color;
+             self.colorRGB = self.hexToRgb(self.colorHex);
+           } else {
+             self.colorRGB = color;
+             self.colorHex = self.rgbToHex(self.colorRGB);
+           }
+           $colorInner.css("backgroundColor", self.colorHex);
+           $colorInput.val(self.colorHex);
+         };
+
+        /**
+         * Set the color to the initial value.
+         *
+         * @method _resetColor
+         * @chainable
+         */
+        this._resetColor = function() {
+          if (self.originalColor) {
+            self.setColor(self.originalColor);
+          } else {
+            $color.find(".colorInner").css("backgroundColor", "");
+          }
+        };
+
+        /**
+         * Close the picker
+         *
+         * @method close
+         * @chainable
+         */
+        this.close = function() {
+            mouseIsDown = false;
+
+            $track.hide();
+        };
+
+        /**
+         * Convert hex to rgb
+         *
+         * @method hexToRgb
+         * @chainable
+         */
+        this.hexToRgb = function(hex) {
+            var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+
+            return "rgb(" + parseInt(result[1], 16) + "," + parseInt(result[2], 16) + "," + parseInt(result[3], 16) + ")";
+        };
+
+        /**
+         * Convert rgb to hex
+         *
+         * @method rgbToHex
+         * @chainable
+         */
+        this.rgbToHex = function(rgb) {
+            var result = rgb.match(/\d+/g);
+
+            function hex(x) {
+                var digits = new Array("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F");
+                return isNaN(x) ? "00" : digits[(x - x % 16 ) / 16] + digits[x % 16];
+            }
+
+            return "#" + hex(result[0]) + hex(result[1]) + hex(result[2]);
+        };
+
+       return _initialize();
+    }
+
+    /**
+     * @class tinycolorpicker
+     * @constructor
+     * @param {Object} options
+        @param {Array} [options.colors=[]] fallback colors for old browsers (ie8-).
+        @param {String} [options.backgroundUrl=''] It will look for a css image on the track div. If not found it will look if there's a url in this property.
+     */
+    $.fn[pluginName] = function(options) {
+        return this.each(function() {
+            if(!$.data(this, "plugin_" + pluginName)) {
+                $.data(this, "plugin_" + pluginName, new Plugin($(this), options));
+            }
+        });
+    };
+}));
+
+var getColorPickerTemplate = function (id) {
+  return /* html */ `
+  <div id="${id ? id : ''}" class="colorPicker">
+    <a class="color"><div class="colorInner"></div></a>
+    <div class="track"></div>
+    <ul class="dropdown"></ul>
+    <input type="hidden" class="colorInput" value="#FFFFFF">
+  </div>
+  `
+};
 
 
   //function override
@@ -998,6 +1405,17 @@ function getPriceSpan(buyout, noTooltip) {
     }
   } else {
     return buyout;
+  }
+}
+
+var addResultMessage = function(containerSelector, messageElement, msgClass, builder) {
+  if (messageElement && $(containerSelector+' .'+msgClass).length === 0) {
+    var div = $(`<div class="gs-style gs-style-light marg-b-5 ${msgClass}"></div>`);
+    $(containerSelector).before(div);
+    div.append(messageElement);
+    if (builder) {
+      builder(div);
+    }
   }
 }
 
@@ -1235,29 +1653,29 @@ function sortItemResults(key, ascending, itemSelector, containerSelector, showAu
     }
   }));
   if (showAutoSortMessage) {
-    var div = $(`<div class="gs-style gs-style-light marg-b-5">${showAutoSortMessage} </div>`);
-    $(containerSelector).before(div);
-    var lnk = $(`<a href="#">Click here to revert to orginal poe.trade order.</a>`);
-    lnk.on('click', function(e) {
-      e.preventDefault();
-      if (key == "buyoutGrouped") {
-        ungroupSameUser(true);
-      }
-      sortItemResults('origIndex', true, itemSelector, containerSelector);
-    });
-    div.append(lnk);
-    div.append(`<span> You can disable this feature in </span>`);
-    var setts = $(`<a href="#">settings</a>`);
-    setts.on('click', function(e) {
-      e.preventDefault();
-      $(document).one(`setting-frame-frame-open`, function() {
-        $('#setting-frame').contents().find('#settings-tab').tab("show");
-        $('#setting-frame').contents().find('#myTabContent .tab-pane.show').removeClass("show active");
-        $('#setting-frame').contents().find('#settings').addClass("show active");
+    addResultMessage(containerSelector, $(`<span>${showAutoSortMessage} </span>`), 'gs-auto-sort-message', function(div) {
+      var lnk = $(`<a href="#">Click here to revert to orginal poe.trade order.</a>`);
+      lnk.on('click', function(e) {
+        e.preventDefault();
+        if (key == "buyoutGrouped") {
+          ungroupSameUser(true);
+        }
+        sortItemResults('origIndex', true, itemSelector, containerSelector);
       });
-      openFrame("setting-frame");
+      div.append(lnk);
+      div.append(`<span> You can disable this feature in </span>`);
+      var setts = $(`<a href="#">settings</a>`);
+      setts.on('click', function(e) {
+        e.preventDefault();
+        $(document).one(`setting-frame-frame-open`, function() {
+          $('#setting-frame').contents().find('#settings-tab').tab("show");
+          $('#setting-frame').contents().find('#myTabContent .tab-pane.show').removeClass("show active");
+          $('#setting-frame').contents().find('#settings').addClass("show active");
+        });
+        openFrame("setting-frame");
+      });
+      div.append(setts);
     });
-    div.append(setts);
   }
 }
 
@@ -1317,16 +1735,35 @@ var saveSearch = function() {
         </div>
       `);
     }
-  }
+  };
   if (!searches[name] || window.confirm(`A search named ${name} already exists. Do you want to overwrite it?`)) {
     saveForm();
   }
 };
 
-var openSearch = function(search, newTab, target) {
-  var form = $(`<form id="poeTradeOpener${target ? '-'+target : ''}" class="hide" action="http://poe.trade/search" method="post" ${(newTab ? 'target="_blank"' : (target ? 'target="'+target+'"' : ''))}></form>`);
+var addQuickFilters = function (terms, search, quickFilters) {
+  debug(search);
+  if (!_.isEmpty(quickFilters["force-league"])) {
+    terms.league = [quickFilters["force-league"]];
+    search = search.replace(/\bleague=[\w\+\-\s]*\b/i,"league="+quickFilters["force-league"].replace(/\s/i,"+"));
+  }
+  if (!_.isEmpty(quickFilters["force-cost"]) && (!quickFilters["force-cost-no-override"] || (_.isEmpty(terms.buyout_max) && _.isEmpty(terms.buyout_min) )) ) {
+    terms.buyout_max = [quickFilters["force-cost"]];
+    terms.buyout_min = [""];
+    terms.buyout_currency = ["chaos"];
+    search = search.replace(/\bbuyout_max=[\.\w\s]*\b/i,"buyout_max="+quickFilters["force-cost"]);
+    search = search.replace(/\bbuyout_min=[\.\w\s]*\b/i,"buyout_min=");
+    search = search.replace(/\bbuyout_currency=[\.\w\s]*\b/i,"buyout_currency=chaos");
+  }
+  return search;
+};
+
+var openSearch = function(search, newTab, target, quickFilters) {
+  var form = $(`<form id="poeTradeOpener${target ? '-'+target : ''}" class="hide" action="${window.location.protocol}//poe.trade/search" method="post" ${(newTab ? 'target="_blank"' : (target ? 'target="'+target+'"' : ''))}></form>`);
   $('body').append(form);
-  $.each( deserialize(search), function( name, values ) {
+  var terms = deserialize(search);
+  addQuickFilters(terms, search, quickFilters);
+  $.each( terms, function( name, values ) {
     $.each( values, function( i, val ) {
       form.append(`<input type="hidden" name="${name}" value="${val}" />`)
     });
@@ -1334,11 +1771,12 @@ var openSearch = function(search, newTab, target) {
   form.submit();
 };
 
-var connections = [];
-var liveSearches = [];
+var connections = {};
+var liveSearches = {};
 var old_uniqs = [];
 var stopSocket = function (index) {
-  debug("Stopped socket "+index);
+  debug("WS - Stopped socket "+index);
+  clearInterval(liveSearches[index].socket_ping_timer);
   connections[index].close();
   // socketStatus(index, "stopped");
 };
@@ -1350,13 +1788,13 @@ var stopAllSockets = function () {
 };
 var resetConnections = function () {
   stopAllSockets();
-  connections = [];
-  liveSearches = [];
+  connections = {};
+  liveSearches = {};
 };
 var is_focused = true, displayed_item_count = 0;
 
-var openMultiSearch = function(searches, names) {
-  debug(searches);
+var openMultiSearch = function(searches, names, live, quickFilters) {
+  debug("openMultiSearch", searches);
   try {
     if (!whisperClipboard) {
       error("no whisperClipboard and no error")
@@ -1388,6 +1826,7 @@ var openMultiSearch = function(searches, names) {
     $("#content").hide();
     main = $("#content");
   }
+  $('#items,#live-notification-settings,#multi-live-alert-box').remove();
   main
   .after(`
     <div id="items"></div>
@@ -1402,12 +1841,13 @@ var openMultiSearch = function(searches, names) {
     </div>
   `)
   .after(`
-    <div class="gs-style alert-box live-search">
+    <div class="gs-style alert-box live-search" id="multi-live-alert-box">
         Multi Live search: <span id="ms-console-holder"></span>
         <span class="right"><a href="" onclick="location.reload()">back to normal results</a></span>
     </div>
   `);
   setupMultiSearchConsole($('#ms-console-holder'), names);
+  live_load_settings();
   $(window).focus(function() {
     is_focused = true;
     displayed_item_count = 0;
@@ -1418,8 +1858,11 @@ var openMultiSearch = function(searches, names) {
   });
 
   var fetches = [];
+  addQuickFiltersMessage("#items", quickFilters, function () {openMultiSearch(searches, names, live, {});});
+
   var getDeferredSearchId = function(name, search, retry) {
     var deferred = $.Deferred();
+    
     var success = function(finalUrl) {
       deferred.resolve(finalUrl);
     };
@@ -1436,6 +1879,9 @@ var openMultiSearch = function(searches, names) {
         deferred.reject(error);
       }
     };
+    var terms = deserialize(search);
+    search = addQuickFilters(terms, search, quickFilters);
+
     GM_xmlhttpRequest({
       method: "POST",
       url: window.location.protocol + "//poe.trade/search",
@@ -1462,17 +1908,18 @@ var openMultiSearch = function(searches, names) {
   };
 
   $.each( searches, function( i, search ) {
-    fetches.push(getDeferredSearchId(names[i], search, 3));
+    fetches.push(function() {return getDeferredSearchId(names[i], search, 3);});
   });
 
-  $.when.apply(this, fetches)
-  .then(function() {
-    debug("getDeferredSearchId.DONE ALL FETCHED: ", arguments);
-    startAllSockets(arguments);
-  }, function() {
+  pacedWhen(fetches, {failureThreshold: 1})
+  .done(function(resources) {
+    debug("getDeferredSearchId.DONE ALL FETCHED: ", resources);
+    startAllSockets(resources);
+  })
+  .fail(function () {
     console.error("getDeferredSearchId.FAIL ALL FETCHED: ", arguments);
     $.each( searches, function( i, search ) {
-      socketStatus(i, "failed");
+      socketStatus(i, "failed", "fetching");
     });
   });
   close();
@@ -1481,123 +1928,199 @@ var openMultiSearch = function(searches, names) {
 var startAllSockets = function (resources) {
   startLiveConsole();
   $.each( resources, function( index, res ) {
-    setTimeout(function(){ var connection = startSocket(index, res); }, (index * 300) + 100);
+    setTimeout(function(){
+      debug("WS - Connecting ["+index+"]: "+res);
+      var connection = startSocket(index, res);
+    }, (index * 300) + 100);
   });
 };
 
 var startSocket = function(index, res) {
+  debug("WS - Starting ["+index+"]: "+res);
   fetchedSocket(index, res);
-  var url;
-  if (window.location.protocol == "https:") {
+  liveSearches[index] = {url: res, last_displayed_id: -1};
+  if (res) {
+    var url;
+    if (window.location.protocol == "https:") {
       url = "wss://live.poe.trade/";
-  } else {
+    } else {
       url = "ws://live.poe.trade/";
-  }
+    }
 
-  function multino_pong_received(index) {
-    stopSocket(index);
-    socketStatus(index, "stopped");
-  }
+    function multino_pong_received(index) {
+      stopSocket(index);
+      socketStatus(index, "stopped");
+    }
 
-  function multiping_socket(index) {
+    function multiping_socket(index) {
       if (connections[index]) {
-          connections[index].send("ping");
-          liveSearches[index].pong_timeout = setTimeout(function () {
-            multino_pong_received(index);
-          }, 3 * 1000);
+        debug("WS - Sending ping ["+index+"]: ");
+        connections[index].send("ping");
+        liveSearches[index].pong_timeout = setTimeout(function () {
+          debug("WS - Pong timed out ["+index+"]: ");
+          multino_pong_received(index);
+        }, 3 * 1000);
       }
-  }
+    }
 
 
-  var multisubscribe = function (uniqs, index) {
-      for (var i = 0; i < uniqs.length; ++i)
-          connections[index].send(JSON.stringify({
-              type: "subscribe",
-              value: uniqs[i]
-          }));
-  }
+    var multisubscribe = function (uniqs, index) {
+      for (var i = 0; i < uniqs.length; ++i) {
+        debug("WS - Subscribing ["+index+"]: ");
+        connections[index].send(JSON.stringify({
+          type: "subscribe",
+          value: uniqs[i]
+        }));
+      }
+    }
 
-  var multilive_kick = function (index) {
-    var ls = liveSearches[index];
-    ls.kicking = true;
-    $.post(ls.url + "/live", {
+    var multilive_kick = function (index) {
+      var ls = liveSearches[index];
+      ls.kicking = true;
+      $.post(ls.url + "/live", {
         "id": ls.last_displayed_id
-    }, function(data) {
+      }, function(data) {
+        debug("WS - Get data: "+ls.url, data);
         ls.last_displayed_id = data["newid"];
         if (data["data"]) {
-            if (socket) {
-                var uniqs = data["uniqs"];
-                ls.old_uniqs = ls.old_uniqs.concat(uniqs);
-                multisubscribe(uniqs);
-            }
-            live_notify();
-            $("#items").prepend(data["data"]);
-            if (!is_focused) {
-                displayed_item_count += data["count"];
-                Tinycon.setBubble(displayed_item_count);
-            }
-            // update_timers();
+          if (socket) {
+            var uniqs = data["uniqs"];
+            ls.old_uniqs = ls.old_uniqs.concat(uniqs);
+            multisubscribe(uniqs);
+          }
+          live_notify();
+          $("#items").prepend(data["data"]);
+          if (!is_focused) {
+            displayed_item_count += data["count"];
+            Tinycon.setBubble(displayed_item_count);
+          }
+          // update_timers();
         }
         ls.kicking = false;
-    }).fail(function() {
+      }).fail(function() {
         $("#live-status").text("Backend failed; retrying... (or try refreshing the page)");
         ls.kicking = false;
-    });
-  };
+      });
+    };
 
-  debug("WS - About to live search: "+res);
-  liveSearches.push({url: res, last_displayed_id: -1});
-  multilive_kick(index);
-  var connection = new WebSocket(res.replace(/^.*search\//,url));
-  connection.onopen = function(event) {
+    debug("WS - About to live search: ", res);
+    multilive_kick(index);
+    if (connections[index] && connections[index].readyState != 3) {
+      debug("WS - WARNING: Tryed to start not closed connection ["+index+"]", res, connections[index]);
+      return connections[index];
+    } else {
+      var connection = new WebSocket(res.replace(/^.*search\//,url));
+      connection.onopen = function(event) {
+        debug("WS - Opened connection: "+res, event);
 
-    liveSearches[index].socket_ping_timer = setInterval(function () {
-      multiping_socket(index);
-    }, 60 * 1000);
-    liveSearches[index].socket_connect_tries = 0;
-    connection.send('{"type": "version", "value": 3}');
-    multiping_socket(index);
-    debug("restoring uniqs: " + old_uniqs + " for search " + index);
-    multisubscribe(old_uniqs, index);
+        liveSearches[index].socket_ping_timer = setInterval(function () {
+          debug("WS - about to ping ["+index+"]");
+          multiping_socket(index);
+        }, 60 * 1000);
+        liveSearches[index].socket_connect_tries = 0;
+        connection.send('{"type": "version", "value": 3}');
+        multiping_socket(index);
+        debug("WS - restoring uniqs: " + old_uniqs + " for search " + index);
+        multisubscribe(old_uniqs, index);
 
-    debug("WS - Opened connection to: "+res, event);
-    socketStatus(index, "connected");
-  };
-  connection.onmessage = function(event) {
-    debug("WS - message from:" + res, event);
-    var msg = $.parseJSON(event.data);
-    socketStatus(index, (typeof msg != "number" && msg && msg.type && msg.type == "pong") ? "pinged" : "working");
-    if (typeof msg == "number") {
-        liveSearches[index].last_known_id = Math.max(liveSearches[index].last_known_id, msg);
-        multilive_kick(index);
-        return;
-    }
-    switch (msg.type) {
-        case "pong":
-            // $("#live-status").text("Connected!");
-            clearTimeout(liveSearches[index].pong_timeout);
-            break;
-        case "notify":
-            liveSearches[index].last_known_id = Math.max(liveSearches[index].last_known_id, msg.value);
+        debug("WS - Opened connection to: "+res, event);
+        socketStatus(index, "connected");
+      };
+      connection.onmessage = function(event) {
+        debug("WS - message from:" + res, event);
+        var msg = $.parseJSON(event.data);
+        var oldLast = liveSearches[index].last_known_id;
+        socketStatus(index, (typeof msg != "number" && msg && msg.type && msg.type == "pong") ? "pinged" : "working");
+        if (typeof msg == "number") {
+          liveSearches[index].last_known_id = Math.max(liveSearches[index].last_known_id, msg);
+          if (oldLast != liveSearches[index].last_known_id) {
             multilive_kick(index);
-            break;
-        case "del":
-            var uniq = msg.value;
-            $(".item-live-" + uniq).addClass("item-gone");
-            var idx = liveSearches[index].old_uniqs.indexOf(uniq);
-            if (idx != -1)
-                liveSearches[index].old_uniqs.splice(idx, 1);
-            break;
-    }
-  };
-  connection.onclose = function(event) {
-    socketStatus(index, "stopped");
-    warn("WS - Error from: "+res, event);
+          } else {
+            debug("WS - multi live loop prevented:", liveSearches[index], oldLast);
+          }
+          return;
+        }
+        switch (msg.type) {
+          case "pong":
+          // $("#live-status").text("Connected!");
+          clearTimeout(liveSearches[index].pong_timeout);
+          break;
+          case "notify":
+          liveSearches[index].last_known_id = Math.max(liveSearches[index].last_known_id, msg.value);
+          if (oldLast != liveSearches[index].last_known_id) {
+            multilive_kick(index);
+          } else {
+            debug("WS - multi live loop prevented:", liveSearches[index], oldLast);
+          }
+          break;
+          case "del":
+          var uniq = msg.value;
+          $(".item-live-" + uniq).addClass("item-gone");
+          var idx = liveSearches[index].old_uniqs.indexOf(uniq);
+          if (idx != -1)
+          liveSearches[index].old_uniqs.splice(idx, 1);
+          break;
+        }
+      };
+      connection.onclose = function(event) {
+        socketStatus(index, "stopped");
+        warn("WS - Error from: "+res, event);
 
-    clearInterval(liveSearches[index].socket_ping_timer);
-  };
-  connections.push(connection);
-  return connection;
+        clearInterval(liveSearches[index].socket_ping_timer);
+      };
+      connections[index] = connection;
+      return connection;
+    }
+  } else {
+    return null;
+  }
+};
+
+var checkQuickFilters = function() {
+  debug("checkQuickFilters - search form", $('#search [name=league]').val(), $('#search [name=buyout_max]').val(), $('#search [name=buyout_min]').val(), $('#search [name=buyout_currency]').val());
+  debug("checkQuickFilters - last settings", getSetting("load-frame-last-force-league"), getSetting("load-frame-last-force-cost"));
+  var lastForceLeague = getSetting("load-frame-last-force-league");
+  var lastForceCost = getSetting("load-frame-last-force-cost");
+  if (
+    (!_.isEmpty(lastForceLeague) && lastForceLeague != $('#search [name=league]').val()) ||
+    (!_.isEmpty(lastForceCost) && (lastForceCost != $('#search [name=buyout_max]').val() || $('#search [name=buyout_min]').val() != "" || $('#search [name=buyout_currency]').val() != "chaos") )
+  ) {
+    return;
+  } else {
+    if (_.isEmpty(lastForceLeague) || lastForceLeague != $('#search [name=league]').val()) {
+      lastForceLeague = null;
+    }
+    if (_.isEmpty(lastForceCost) || lastForceCost != $('#search [name=buyout_max]').val() || $('#search [name=buyout_min]').val() != "" || $('#search [name=buyout_currency]').val() != "chaos") {
+      lastForceCost = null;
+    }
+
+    if (!_.isEmpty(lastForceLeague) || !_.isEmpty(lastForceCost)) {
+      var message = `On this search you might have forced ${(lastForceLeague ? ("league to "+lastForceLeague+ ((lastForceCost) ? " and" : "")) : "")} ${(lastForceCost ? ("maximum price of "+lastForceCost+" chaos") : "")}. If there are less results then expected it might be for those additional filters.`;
+      addResultMessage(ITEM_SEARCH_CONTAINER, $(`<span><i class="fas fa-exclamation-triangle"></i> ${message} </span>`), 'gs-forced-filters-message', function (div) {
+        div.addClass("gs-warning");
+      });
+    }
+
+  }
+};
+
+var addQuickFiltersMessage = function(containerSelector, quickFilters, remove) {
+  $('.gs-forced-filters-message').remove();
+  if (!_.isEmpty(quickFilters["force-league"]) || !_.isEmpty(quickFilters["force-cost"])) {
+    var league = quickFilters["force-league"], cost = quickFilters["force-cost"];
+    var message = `On this search you forced ${(league ? ("league to "+league+ ((cost) ? " and" : "")) : "")} ${(cost ? ("maximum price of "+cost+" chaos") : "")}`;
+    addResultMessage(containerSelector, $(`<span><i class="fas fa-exclamation-triangle"></i> ${message} </span>`), 'gs-forced-filters-message', function(div) {
+      div.addClass("gs-warning");
+      if (remove) {
+        var lnk = $(`<a href="#">remove filters</a>`);
+        lnk.on('click', function(e) {
+          e.preventDefault();
+          remove();
+        });
+        div.append(lnk);
+      }
+    });
+  }
 };
 
   var leagues = [], currencies, isCurr, ASC = true, DESC = false;
@@ -1890,7 +2413,7 @@ function initCurrencyTables(iframe) {
     current_offer.totalhave = x * current_offer.buyvalue;
     $("#contactbuyval").text(current_offer.totalwant);
     $("#contactsellval").text(current_offer.totalhave);
-    var msg = "@" + current_offer.ign + " Hi, I'd like to buy your " + current_offer.totalwant + " " + CURRENCY_TEXTS[current_offer.sellcurrency] + " for my " + current_offer.totalhave + " " + CURRENCY_TEXTS[current_offer.buycurrency] + " in Delve.";
+    var msg = "@" + current_offer.ign + " Hi, I'd like to buy your " + current_offer.totalwant + " " + CURRENCY_TEXTS[current_offer.sellcurrency] + " for my " + current_offer.totalhave + " " + CURRENCY_TEXTS[current_offer.buycurrency] + " in "+getCurrentLeague()+".";
     $("#contacttext").text(msg);
     if (current_offer.stock && current_offer.totalwant > current_offer.stock) {
       $("#stockproblem").text("Unfortunate issue! " + current_offer.username + " only has " + current_offer.stock + " " + CURRENCY_TEXTS[current_offer.sellcurrency] + ". And you're asking for " + current_offer.totalwant + ".");
@@ -2245,6 +2768,32 @@ function deserialize( data ) {
   return normalized;
 }
 
+function serialize( data ) {
+  var pairs = _.toPairs(data);
+  var toJoin = [];
+  for (var i = 1; pairs.filter(function(x){ return x.length > 1 && x[1].length >= i}).length > 0; i++) {
+    var filteredPairs = pairs.filter(function(x){ return x.length > 1 && x[1].length >= i});
+    for (var n = 0; n < filteredPairs.length; n++) {
+      if (filteredPairs[n].length == 2) {
+        toJoin.push(filteredPairs[n][0] + "=" + filteredPairs[n][1][i-1]);
+      }
+    }
+  }
+  return toJoin.join("&");
+}
+
+var getSearchProperties = function() {
+  var searches = localStorage.getItem(getSearchKey()+"-colors");
+  if (!searches) {
+    searches = {};
+  } else {
+    searches = JSON.parse(searches);
+  }
+  return searches;
+};
+var putSearchProperties = function(searches) {
+  localStorage.setItem(getSearchKey()+"-colors", JSON.stringify(searches));
+};
 var getSearches = function() {
   var searches = localStorage.getItem(getSearchKey());
   if (!searches) {
@@ -2266,7 +2815,14 @@ var renameSearch = function(oldName, newName) {
     loadSearches();
   }
 };
-
+var colorSearch = function(name, color) {
+  var searches = getSearchProperties();
+  if (!searches[name]) {
+    searches[name] = {};
+  }
+  searches[name].color = color;
+  putSearchProperties(searches);
+};
 var deleteSearch = function(name) {
   var searches = getSearches();
   if (searches[name]) {
@@ -2357,7 +2913,7 @@ var loadMultiSearches = function() {
 
   $("#search-list .form-check-input", multiFrame[0].contentWindow.document).on('change', checkMultiSelected);
   checkMultiSelected();
-
+  setupSearchAdditions(multiFrame);
 };
 
 var loadSearches = function() {
@@ -2367,6 +2923,11 @@ var loadSearches = function() {
   loadFrame.contents().find('#search-list').empty();
 
   var searches = getSearches();
+  var searchProperties = getSearchProperties();
+  var colorsImage = new Image();
+  colorsImage.crossOrigin = "Anonymous";
+  colorsImage.src = "https://raw.githubusercontent.com/ghostscript3r/poe-trade-enhancer/master/images/text-color.png";
+
   $.each( Object.keys(searches).sort(), function( i, k ) {
     var row = $(`<tr></tr>`);
     row.data("name", k);
@@ -2374,7 +2935,7 @@ var loadSearches = function() {
 
     var lnk = $(`<a href="#" onclick="return false;">${k}</a>`);
     lnk.on( "click", function(e) {
-      openSearch(searches[k], e.ctrlKey);
+      openSearch(searches[k], e.ctrlKey, null, getSearchAdditions(loadFrame));
     });
     row.append(lnk);
     lnk.wrap('<td>');
@@ -2391,6 +2952,15 @@ var loadSearches = function() {
     row.append(ren);
     ren.wrap('<td>');
 
+    var cpic = $(getColorPickerTemplate());
+    row.append(cpic);
+    cpic.wrap('<td>');
+    cpic.tinycolorpicker({image: colorsImage, color: ((searchProperties[k] && searchProperties[k].color) ? searchProperties[k].color : null)});
+    cpic.on( "change", function(e, colorHex, colorRGB) {
+      debug(arguments);
+      colorSearch(k, colorHex);
+    });
+
     var del = $(`<a href="#" onclick="return false;" title="delete"><i class="fas fa-trash"></i></a>`);
     del.on( "click", function(e) {
       deleteSearch(k);
@@ -2401,12 +2971,13 @@ var loadSearches = function() {
 
     loadFrame.contents().find('#search-list').append(row);
   });
+  setupSearchAdditions(loadFrame);
 };
 
 var multiFrameContent = /* html */ `
-<div class="container">
+<div class="container fixed-top">
   <div class="row">
-    <form class="col-md-12 py-2">
+    <form class="col-md-12 py-2 mb-0">
       <h5>Multi live search</h5>
       <div class="input-group">
         <input type="text" class="form-control border-primary" name="searchName" id="searchName" placeholder="Filter list..." autocomplete="off" />
@@ -2416,11 +2987,19 @@ var multiFrameContent = /* html */ `
       </div>
     </form>
   </div>
-  <div class="row pb-5">
-    <div class="col-md-12">
-      <button id="check-all" class="btn btn-xs" type="button" name="button" tippy="Select all"><i class="far fa-check-square"></i></button>
-      <button id="check-none" class="btn btn-xs" type="button" name="button" tippy="Deselect all"><i class="far fa-square"></i></button>
+</div>
+<div class="container middle-list">
+  <div class="row">
+    <div class="col">
+      <button id="check-all" class="btn btn-xs" type="button" name="button" tippy="Select all"><i class="far fa-check-square"></i> all</button>
+      <button id="check-none" class="btn btn-xs" type="button" name="button" tippy="Deselect all"><i class="far fa-square"></i> none</button>
     </div>
+    <div class="col-5" id="search-additions-force-cost">
+    </div>
+    <div class="col" id="search-additions-force-league">
+    </div>
+  </div>
+  <div class="row pb-5">
     <div class="col-md-12 table-responsive">
       <div class="alert alert-warning d-none" role="alert" id="no-searches-alert">
         You need to save at least one search to use this feature
@@ -2429,13 +3008,15 @@ var multiFrameContent = /* html */ `
       </table>
     </div>
   </div>
+</div>
+<div class="container fixed-bottom py-2 border-top">
   <div class="row justify-content-end">
-    <div class="col-8">
-    </div>
-    <div class="col-4">
+    <div class="col-4 col-md-3">
       <button id="multi-live" type="button" class="btn btn-primary">
         Search <i class="fas fa-satellite-dish"></i>
       </button>
+    </div>
+    <div class="col-2">
       <button id="" type="button" class="btn btn-close">
         Close
       </button>
@@ -2494,9 +3075,9 @@ var loadFrameContent = /* html */ `
     </div>
   </div>
 </div>
-<div class="container">
+<div class="container fixed-top">
   <div class="row">
-    <form class="col-md-12 py-2">
+    <form class="col-md-12 pb-0">
       <h5>Load search</h5>
       <div class="input-group">
         <input type="text" class="form-control border-primary" name="searchName" id="searchName" placeholder="Filter list..." autocomplete="off" />
@@ -2506,14 +3087,24 @@ var loadFrameContent = /* html */ `
       </div>
     </form>
   </div>
+</div>
+<div class="container middle-list">
+  <div class="row px-1">
+    <div class="col" id="search-additions-force-cost">
+    </div>
+    <div class="col" id="search-additions-force-league">
+    </div>
+  </div>
   <div class="row pb-5">
     <div class="col-md-12 table-responsive">
       <table class="table table-sm" id="search-list">
       </table>
     </div>
   </div>
+</div>
+<div class="container fixed-bottom py-2 border-top">
   <div class="row justify-content-end">
-    <div class="col-10">
+    <div class="col">
       <button id="import" type="button" class="btn btn-primary">
         Import <i class="fas fa-upload"></i>
       </button>
@@ -2572,6 +3163,58 @@ var filterSearch = function(iframe) {
       });
     }
   });
+};
+
+var addSearchAdditions = function(iframe) {
+  var forceLeagueCheckbox = $(/* html */ `<div class="form-group form-check form-control-sm">
+    <input type="checkbox" class="form-check-input" id="force-league">
+    <label class="form-check-label" for="force-league">Force <span class="current-league"></span> league</label>
+  </div>`);
+  var forceMaxCostCheckbox = $(/* html */ `<div>
+    <div class="nowrap">
+      <label for="force-cost" class="col-form-label col-form-label-sm">force max chaos cost</label>
+      <input type="number" class="form-control form-control-sm col-3 d-inline" id="force-cost">
+    </div>
+    <div class="form-group form-check form-control-sm">
+      <input type="checkbox" class="form-check-input" id="force-cost-no-override">
+      <label class="form-check-label" for="force-cost-no-override">only if not specified in search</label>
+    </div>
+  </div>`);
+  iframe.contents().find("#search-additions-force-league").empty().append(forceLeagueCheckbox);
+  iframe.contents().find("#search-additions-force-cost").empty().append(forceMaxCostCheckbox);
+  iframe.contents().find("#force-league").on("click change", function () {
+    setSetting(iframe.attr("id")+"-last-force-league", iframe.contents().find("#force-league").is(':checked'));
+  });
+  iframe.contents().find("#force-cost-no-override").on("click change", function () {
+    setSetting(iframe.attr("id")+"-last-force-cost-no-override", iframe.contents().find("#force-cost-no-override").is(':checked'));
+  });
+  iframe.contents().find("#force-cost").on("click change", function () {
+    setSetting(iframe.attr("id")+"-last-force-cost", iframe.contents().find("#force-cost").val());
+  });
+};
+
+var setupSearchAdditions = function(iframe) {
+  var lg = getCurrentLeague();
+  if (lg) {
+    var lastForceLeague = getSetting(iframe.attr("id")+"-last-force-league");
+    iframe.contents().find("#search-additions-force-league .current-league").text(lg);
+    iframe.contents().find("#force-league").prop("checked", ""+lastForceLeague == "true").prop("disabled", false);
+  } else {
+    iframe.contents().find("#search-additions-force-league .current-league").text("");
+    iframe.contents().find("#force-league").prop("checked", false).prop("disabled", true);
+  }
+  var lastForceCost = getSetting(iframe.attr("id")+"-last-force-cost");
+  var lastForceCostNoOverride = getSetting(iframe.attr("id")+"-last-force-cost-no-override");
+  iframe.contents().find("#force-cost-no-override").prop("checked", ""+lastForceCostNoOverride == "true");
+  iframe.contents().find("#force-cost").val(lastForceCost);
+};
+
+var getSearchAdditions = function(iframe) {
+  var options = {};
+  options["force-cost-no-override"] = iframe.contents().find("#force-cost-no-override").is(':checked');
+  options["force-league"] = (iframe.contents().find("#force-league").is(':checked') ? getCurrentLeague() : false);
+  options["force-cost"] = iframe.contents().find("#force-cost").val();
+  return options;
 };
 
 var sockets = [], msConsole, msConsoleIntervalId, msConsoleStopped;
@@ -2637,23 +3280,30 @@ var stopLiveConsole = function() {
 
 var fetchedSocket = function(index, res) {
   sockets[index].resource = res;
-  sockets[index].status = "fetched";
+  sockets[index].status = ((res) ? "fetched" : "failed");
+  sockets[index].doing = "fetching";
   updateSocketStatus();
 };
 
-var socketStatus = function(index, status) {
+var socketStatus = function(index, status, doing) {
+  debug("Changing socket status:", index, status, sockets[index]);
   sockets[index].lastWasAPing = (status == "pinged");
   sockets[index].status = (status == "pinged") ? "working" : status;
+  sockets[index].doing = doing;
   if (sockets[index].status == "working" ) {
     sockets[index].lastMessage = moment().valueOf();
     sockets[index].retry = null;
   } else if (status == "stopped" && !msConsoleStopped) {
     if (!sockets[index].retry) {
-      sockets[index].retry = 1;
+      sockets[index].retry = 10;
     } else {
-      sockets[index].retry = sockets[index].retry * 10;
+      sockets[index].retry = Math.min(sockets[index].retry + 10, 120);
     }
-    sockets[index].retryId = setTimeout(function(){ startSocket(index, sockets[index].resource); }, sockets[index].retry * 1000);
+    sockets[index].retry = Math.round(randomize(sockets[index].retry));
+    sockets[index].retryId = setTimeout(function(){
+      debug("WS - Retry connecting ["+index+"]: "+sockets[index].resource, sockets[index].name, sockets[index].retry);
+      startSocket(index, sockets[index].resource);
+    }, sockets[index].retry * 1000);
   }
   updateSocketStatus();
 };
@@ -2676,6 +3326,9 @@ var updateSocketStatus = function() {
         break;
       case "failed":
         $(`#ms-console-tip-${i}`).removeClass("gs-danger gs-info gs-warning gs-success").addClass("gs-danger");
+        if (sockets[i].doing) {
+          $(`#ms-console-tip-last-${i}`).text(`${sockets[i].doing}`);
+        }
         break;
       case "fetched":
       case "connected":
@@ -2757,10 +3410,11 @@ var createMultiFrame = function(iframe, callback) {
       names.push(dt.name);
     });
     setSetting("last-multiLive", names);
-    openMultiSearch(multiSearches, names);
+    openMultiSearch(multiSearches, names, true, getSearchAdditions(multiFrame));
   });
 
   filterSearch(iframe);
+  addSearchAdditions(iframe);
 
   iframe.contents().find('#check-all').on('click', function() {
     $("#search-list .form-check-input:visible", iframe[0].contentWindow.document).prop('checked', true);
@@ -2799,6 +3453,7 @@ var createLoadFrame = function(iframe, callback) {
     // $("#renameModal", iframe[0].contentWindow.document).modal({show: false});
     iframe.contents().find("#renameModal").modal({show: false});
     filterSearch(iframe);
+    addSearchAdditions(iframe);
     // $("#searchName", iframe[0].contentWindow.document).on("change", function() {
     // });
 
@@ -3118,6 +3773,7 @@ var initSaveManager = function() {
               }
             });
           }
+          checkQuickFilters();
         } else {
           debug("Some features are disabled because we've been unable to load Poe.Ninja currency values.")
         }
